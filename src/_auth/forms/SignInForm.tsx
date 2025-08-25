@@ -32,10 +32,8 @@ function SignInForm() {
 
     async function onSubmit(values: z.infer<typeof SigninValidation>) {
         try {
-            // 🔹 Always log out any old session first
             await account.deleteSession("current").catch(() => null);
 
-            // 🔹 Try signing in
             const session = await signInAccount({
                 email: values.email,
                 password: values.password,
@@ -45,8 +43,7 @@ function SignInForm() {
                 showError("Invalid email or password.");
                 return;
             }
-
-            // 🔹 Double-check with server that user data exists
+            
             const isLoggedIn = await checkAuthUser();
             if (!isLoggedIn) {
                 // Session exists but user fetch failed — treat as invalid login
