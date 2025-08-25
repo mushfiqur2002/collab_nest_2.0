@@ -18,12 +18,11 @@ function Home() {
                             <Loader />
                         ) : (
                             <ul className="flex flex-col flex-1 gap-4 w-full relative snap-x">
-                                {posts?.documents.map((post: Models.Document)=> (
+                                {posts?.documents.map((post: Models.Document) => (
                                     <li key={post.userID} className="snap-center">
                                         <PostCard post={post}></PostCard>
                                     </li>
                                 ))}
-                                text
                             </ul>
                         )}
                     </div>
