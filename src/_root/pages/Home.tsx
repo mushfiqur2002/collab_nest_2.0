@@ -1,0 +1,37 @@
+import Loader from "@/components/shared/Loader";
+import PostCard from "@/components/shared/PostCard";
+import Searching from "@/components/shared/Searching"
+import { useGetRecentPosts } from "@/lib/react-query/queryandmutation"
+import type { Models } from "appwrite";
+
+function Home() {
+    const { data: posts, isPending: isPostLoading, isError: isPostError } = useGetRecentPosts();
+    return (
+        <div className="flex flex-col w-full px-4">
+            <div className="sticky top-0 bg-dark-1 z-10">
+                <Searching />
+            </div>
+            <div className="flex flex-1 relative">
+                <div className="home-container">
+                    <div className="home-posts relative">
+                        {isPostLoading && !posts ? (
+                            <Loader />
+                        ) : (
+                            <ul className="flex flex-col flex-1 gap-4 w-full relative snap-x">
+                                {posts?.documents.map((post: Models.Document)=> (
+                                    <li key={post.userID} className="snap-center">
+                                        <PostCard post={post}></PostCard>
+                                    </li>
+                                ))}
+                                text
+                            </ul>
+                        )}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Home
