@@ -6,7 +6,6 @@ import { useGetRecentPosts } from "@/lib/react-query/queryandmutation";
 import type { Models } from "appwrite";
 import { File, Loader } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { data } from "react-router-dom";
 
 function Applications() {
 
@@ -37,9 +36,6 @@ function Applications() {
       )
     );
   }, [posts, applicant, user.accountID]);
-
-  console.log('my applicatoin', myApplication);
-  console.log('my appliced application in post', appliedPosts);
 
 
   const myPost = posts?.documents.filter((p) => p.userID === user.accountID)

@@ -1,6 +1,5 @@
 
 function MyApplicationShow({ myappliedpost, application }: any) {
-    console.log('my applied post id: ', myappliedpost.$id)
     return (
         <div className="post-card p-4 shadow flex flex-col gap-4 relative">
             <div className="">
