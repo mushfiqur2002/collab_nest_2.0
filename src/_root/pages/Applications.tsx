@@ -71,7 +71,9 @@ function Applications() {
       </div>
 
       {/* .... */}
-      <div className="w-full h-[1.15px] bg-gray-700"></div>
+      <div className="w-full h-4 bg-gray-700 flex flex-center">
+        <p className="flex flex-center">+</p>
+      </div>
       {/* .... */}
 
       {/* my applicaiton section  */}

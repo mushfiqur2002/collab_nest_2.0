@@ -37,6 +37,7 @@ function MyApplicationShow({ myappliedpost, application }: any) {
                     a.postID === myappliedpost.$id ? (
                         <p key={a.$id} className={`text-sm 
                             ${a.status === "accepted" ? "shad-button_accept" : ""}
+                            ${a.status === "pending" ? "shad-button_pending" : ""}
                             ${a.status === "rejected" ? "shad-button_reject" : ""}`}>
                             {a.status}
                         </p>

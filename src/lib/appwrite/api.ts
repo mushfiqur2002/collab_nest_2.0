@@ -256,6 +256,7 @@ export async function getApplications() {
     return applications;
 }
 
+// create members
 export async function createMembers(candidate: any, elderID: string) {
     try {
         const member = await databases.createDocument(
@@ -267,15 +268,23 @@ export async function createMembers(candidate: any, elderID: string) {
                 elderID: elderID,
             }
         )
-        if (member) {
-            
-        }
-
         return member;
     } catch (error) {
         console.error("Error creating member:", error);
         throw error;
     }
+}
+
+// get members
+export async function getMembers() {
+    const members = await databases.listDocuments(
+        appWriteConfig.databaseID,
+        appWriteConfig.membersCollectionID
+    )
+    if (!members) {
+        throw Error
+    }
+    return members;
 }
 
 // Update Application
