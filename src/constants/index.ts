@@ -1,4 +1,4 @@
-import { House, Users, FileUser, SquarePen } from 'lucide-react';
+import { House, Users, FileUser, SquarePen, FolderGit2 } from 'lucide-react';
 export const navLinks = [
     {
         label: 'home',
@@ -19,6 +19,11 @@ export const navLinks = [
         label: 'create post',
         icon: SquarePen,
         path: '/create-post'
+    },
+    {
+        label: 'project',
+        icon: FolderGit2,
+        path: '/project'
     },
 ]
 
@@ -42,5 +47,10 @@ export const bottomBarLinks = [
         label: 'create post',
         icon: SquarePen,
         path: '/create-post'
+    },
+    {
+        label: 'project',
+        icon: FolderGit2,
+        path: '/project'
     },
 ]

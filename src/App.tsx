@@ -6,6 +6,7 @@ import SignUpForm from './_auth/forms/SignUpForm'
 import { Applications, CreatePost, Home, People } from './_root/pages'
 import AuthLayout from './_auth/AuthLayout'
 import RootLayout from './_root/RootLayout'
+import Project from './_root/pages/Project'
 function App() {
 
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path='/all-users' element={<People/>}></Route>
           <Route path='/create-post' element={<CreatePost />} />
           <Route path='/application' element={<Applications />} />
+          <Route path='/project' element={<Project/>} />
         </Route>
 
       </Routes>
