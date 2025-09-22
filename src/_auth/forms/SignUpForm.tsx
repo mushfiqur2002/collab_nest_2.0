@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
 import { SignupValidation } from "@/lib/validation"
 import Loader from "@/components/shared/Loader"
 import { Link, useNavigate } from "react-router-dom"
@@ -37,11 +38,14 @@ function SignUpForm() {
         defaultValues: {
             email: '',
             password: '',
+            category: '',
             username: '',
         },
     })
 
     async function onSubmit(values: z.infer<typeof SignupValidation>) {
+        console.log(values);
+        
         const newUser = await createUserAccount(values);
 
         if (!newUser || newUser instanceof Error) {
@@ -126,6 +130,33 @@ function SignUpForm() {
                                 </FormItem>
                             )}
                         />
+                        {/* category */}
+                        <FormField
+                            control={form.control}
+                            name="category"
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel>Category</FormLabel>
+                                    <FormControl>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <SelectTrigger className="w-full shad-input text-sm">
+                                                <SelectValue placeholder="Select category"/>
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-dark-4">
+                                                <SelectItem value="recruiter">Recruiter</SelectItem>
+                                                <SelectItem value="seeker">Seeker</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+
                         {/* password */}
                         <FormField
                             control={form.control}

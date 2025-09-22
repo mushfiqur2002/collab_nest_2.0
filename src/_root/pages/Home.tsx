@@ -7,13 +7,13 @@ import type { Models } from "appwrite";
 function Home() {
     const { data: posts, isPending: isPostLoading } = useGetRecentPosts();
     return (
-        <div className="flex flex-col w-full px-4">
+        <div className="flex flex-col w-full px-4 h-full">
             <div className="sticky top-0 bg-dark-1 z-10">
                 <Searching />
             </div>
-            <div className="flex flex-1 relative">
+            <div className="flex flex-1 relative h-full">
                 <div className="home-container">
-                    <div className="home-posts relative">
+                    <div className="home-posts relative pb-6">
                         {isPostLoading && !posts ? (
                             <Loader />
                         ) : (

@@ -1,6 +1,7 @@
 export type INewUser = {
     email: string;
     password: string;
+    category: string;
     username: string;
 }
 
@@ -8,6 +9,7 @@ export type IDBCollectionNewUser = {
     accountID: string;
     email: string;
     username: string;
+    category: string;
     avatarURL: URL | string;
 }
 
@@ -21,6 +23,7 @@ export type IUser = {
     email: string;
     username: string;
     avatarURL: URL | string;
+    category: string
 }
 
 export type INavLink = {

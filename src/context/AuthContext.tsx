@@ -8,7 +8,8 @@ export const INITIAL_USER = {
     accountID: '',
     email: '',
     username: '',
-    avatarURL: ''
+    avatarURL: '',
+    category: ''
 }
 
 const INITIAL_STATE = {
@@ -44,7 +45,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
                     accountID: currentAccount.accountID,
                     email: currentAccount.email,
                     username: currentAccount.username,
-                    avatarURL: currentAccount.avatarURL
+                    avatarURL: currentAccount.avatarURL,
+                    category: currentAccount.category
                 })
                 setIsAuthenticated(true);
                 return true;
@@ -60,13 +62,13 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     // checking auth and if null navigate in sign-in
-    useEffect(()=>{
-        if(
+    useEffect(() => {
+        if (
             localStorage.getItem('cookieFallback') === '[]' ||
             localStorage.getItem('cookieFallback') === null
         ) navigate('/sign-in');
         checkAuthUser();
-    },[])
+    }, [])
 
     const value = {
         user,

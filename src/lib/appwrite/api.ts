@@ -26,6 +26,7 @@ export async function createUserAccount(user: INewUser) {
             accountID: newAccount.$id,
             email: user.email,
             username: user.username,
+            category: user.category,
             avatarURL: avatarUrl,
         })
         return newUser;

@@ -25,11 +25,14 @@ function TopBar() {
             return () => clearTimeout(timer);
         }
     }, [isSuccess, navigate, showSuccess]);
+    //recruiter
+    const userCategory = user.category;
+
 
     return (
         <section className="topbar flex flex-col justify-between items-center bg-gray-800 text-white px-4 py-0">
             <div className="w-full flex flex-between py-4 px-2">
-                <div>
+                <div className="flex gap-2">
                     <Link to="/">
                         <img
                             src="/public/assets/dark-mode-logo.png"
@@ -37,11 +40,14 @@ function TopBar() {
                             className="w-full h-8"
                         />
                     </Link>
+                    <div className={`flex flex-center text-dark-4 p-1 px-3 rounded-full ${userCategory === 'recruiter' ? 'bg-purple-600' : 'bg-sky-600'}`}>
+                        <p className="capitalize">{userCategory}</p>
+                    </div>
                 </div>
 
                 <div className="flex flex-center gap-2">
                     <Link to={`/profile/${user?.accountID}`}
-                        className="flex-center">
+                    >
                         <img
                             src={`${user.avatarURL}`}
                             alt="user avatar"

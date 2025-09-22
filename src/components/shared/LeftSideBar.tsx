@@ -1,6 +1,6 @@
 import { navLinks } from "@/constants";
 import { useUserContext } from "@/context/AuthContext";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useAlert } from "@/context/AlertContext";
 import { useSignOutUserAccMutation } from "@/lib/react-query/queryandmutation";
@@ -28,13 +28,21 @@ function LeftSideBar() {
         showLoading();
         await signOut();
     };
+
+    const userCategory = user.category;
     return (
         <nav className="leftsidebar gap-4 h-full bg-gray-900">
             {/* logo image */}
-            <div>
-                <img src="../../../public/assets/dark-mode-logo.png"
-                    alt="Collab Nest Logo"
-                    className="h-8" />
+            <div className="flex gap-2">
+                <Link to="/">
+                    <img
+                        src="../../../public/assets/dark-mode-logo.png"
+                        alt="logo"
+                        className="w-full h-8"
+                    />
+                </Link>
+                <div className={`md:w-8 md:h-8 flex flex-center text-dark-4 p-1 px-3 rounded-full ${userCategory === 'recruiter' ? 'bg-purple-600' : 'bg-sky-600'}`}>
+                </div>
             </div>
             {/* user info */}
             <div className="w-full flex flex-start flex-center gap-2 mt-4">

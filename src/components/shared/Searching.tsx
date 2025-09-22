@@ -4,7 +4,7 @@ import { Search } from "lucide-react"
 
 function Searching() {
     return (
-        <div className="flex w-full flex flex-center py-2 md:py-6 sticky top-0">
+        <div className="flex w-full flex flex-center sticky top-0 py-2 md:py-4">
             <Input
                 type="text"
                 placeholder="Search for people, posts, applications..."
