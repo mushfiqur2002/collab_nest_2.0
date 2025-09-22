@@ -1,7 +1,7 @@
 import Applicant from "@/components/shared/Applicant";
 import MyApplicationShow from "@/components/shared/MyApplicationShow";
 import { useUserContext } from "@/context/AuthContext";
-import { getApplications, getRecentPosts } from "@/lib/appwrite/api"
+import { getApplications } from "@/lib/appwrite/api"
 import { useGetRecentPosts } from "@/lib/react-query/queryandmutation";
 import type { Models } from "appwrite";
 import { File, Loader } from "lucide-react";
@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 
 function Applications() {
 
-  const { data: posts, isPending: isPostLoading, isError: isPostError } = useGetRecentPosts();
+  const { data: posts, isPending: isPostLoading } = useGetRecentPosts();
   const [applicant, setApplicant] = useState<Models.Document[]>([]);
   const { user } = useUserContext();
 

@@ -5,7 +5,7 @@ import { useGetRecentPosts } from "@/lib/react-query/queryandmutation"
 import type { Models } from "appwrite";
 
 function Home() {
-    const { data: posts, isPending: isPostLoading, isError: isPostError } = useGetRecentPosts();
+    const { data: posts, isPending: isPostLoading } = useGetRecentPosts();
     return (
         <div className="flex flex-col w-full px-4">
             <div className="sticky top-0 bg-dark-1 z-10">

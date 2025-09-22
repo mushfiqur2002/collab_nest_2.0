@@ -6,7 +6,7 @@ import { useUserContext } from "@/context/AuthContext";
 import AppllicationForms from "../forms/AppllicationForms";
 import { getApplications, getUsers } from "@/lib/appwrite/api";
 import Candidate from "@/constants/Candidate";
-import { FileCheck, FileCheck2, FileClock, FileX, FileX2 } from "lucide-react";
+import { FileCheck2, FileClock, FileX2 } from "lucide-react";
 
 type PostCardProps = {
     post: Models.Document;

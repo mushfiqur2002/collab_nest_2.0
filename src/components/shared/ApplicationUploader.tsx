@@ -17,6 +17,8 @@ function ApplicationUploader({ onFileSelect, mediaUrl, inputId = "application-fi
         const selectedFiles = Array.from(e.target.files);
         setFiles(selectedFiles);
         onFileSelect(selectedFiles);
+        console.log(files);
+        
 
         const previewUrl = URL.createObjectURL(selectedFiles[0]);
         setFileUrl(previewUrl);
