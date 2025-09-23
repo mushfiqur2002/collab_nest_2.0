@@ -107,10 +107,10 @@ export default function ProjectForms() {
                         {/* members */}
                         <FormField
                             control={form.control}
-                            name="privacy"
+                            name="members"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Privacy</FormLabel>
+                                    <FormLabel>Members</FormLabel>
                                     <FormControl>
                                         <Select
                                             onValueChange={field.onChange}

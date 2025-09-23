@@ -35,8 +35,6 @@ function Applicant({ post, applicant }: any) {
             if (!acceptMember) showError('something error');
             showLoading();
             showSuccess(`accept member ${candidate.userID}`)
-            console.log("Member added:", acceptMember);
-            console.log("Member added candidate:", candidate.$id);
         } catch (error) {
             console.error("Failed to accept member:", error);
         }

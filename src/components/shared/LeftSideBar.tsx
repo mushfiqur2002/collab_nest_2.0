@@ -41,7 +41,7 @@ function LeftSideBar() {
                         className="w-full h-8"
                     />
                 </Link>
-                <div className={`md:w-8 md:h-8 flex flex-center text-dark-4 p-1 px-3 rounded-full ${userCategory === 'recruiter' ? 'bg-purple-600' : 'bg-sky-600'}`}>
+                <div className={`md:w-8 md:h-8 flex flex-center text-dark-4 p-1 px-3 rounded-full ${userCategory === 'recruiter' ? 'bg-green-1' : 'bg-sky-600'}`}>
                 </div>
             </div>
             {/* user info */}

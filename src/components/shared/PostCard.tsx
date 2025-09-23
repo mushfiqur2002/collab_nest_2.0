@@ -50,6 +50,8 @@ function PostCard({ post }: PostCardProps) {
     const alreadyApplied = applications.find(
         (application) => application.postID === post.$id && application.userID === user.accountID
     )
+    const userCategory = user.category
+    console.log(userCategory);
 
     return (
         <div className="post-card p-4 shadow flex flex-col gap-4 relative">
@@ -113,42 +115,49 @@ function PostCard({ post }: PostCardProps) {
                 <div className="flex gap-2 w-1/2 justify-start">
                     {
                         isAuthor ? (
-                            <div className="shad-button_primary rounded-md p-[11.75px] font-light text-sm">
-                                <FileX2 size={16} /><p>Can't apply own post</p>
+                            <div className="shad-button_primary rounded-md p-[11.75px] font-light text-sm flex items-center gap-2">
+                                <FileX2 size={16} />
+                                <p>Can't apply own post</p>
+                            </div>
+                        ) : userCategory === "recruiter" ? (
+                            <div className="shad-button_primary rounded-md p-[11.75px] font-light text-sm flex items-center gap-2">
+                                <FileX2 size={16} />
+                                <p>Recruiters can't apply</p>
+                            </div>
+                        ) : alreadyApplied ? (
+                            <div
+                                className={`rounded-md p-[11.75px] font-light text-sm flex items-center gap-2
+                                    ${alreadyApplied.status === "pending" ? "shad-button_pending" : ""}
+                                    ${alreadyApplied.status === "accepted" ? "shad-button_accept" : ""}
+                                    ${alreadyApplied.status === "rejected" ? "shad-button_reject" : ""}
+                                `}
+                            >
+                                {alreadyApplied.status === "pending" && (
+                                    <>
+                                        <FileClock size={16} />
+                                        <p>Pending</p>
+                                    </>
+                                )}
+
+                                {alreadyApplied.status === "accepted" && (
+                                    <>
+                                        <FileCheck2 size={16} />
+                                        <p>Accepted</p>
+                                    </>
+                                )}
+
+                                {alreadyApplied.status === "rejected" && (
+                                    <>
+                                        <FileX2 size={16} />
+                                        <p>Rejected</p>
+                                    </>
+                                )}
                             </div>
                         ) : (
-                            alreadyApplied ? (
-                                <div className={`rounded-md p-[11.75px] font-light text-sm flex items-center gap-2
-                                        ${alreadyApplied.status === "pending" ? "shad-button_pending" : ""}
-                                        ${alreadyApplied.status === "accepted" ? "shad-button_accept" : ""}
-                                        ${alreadyApplied.status === "rejected" ? "shad-button_reject" : ""}
-                                    `}>
-                                    {alreadyApplied.status === "pending" && (
-                                        <>
-                                            <FileClock size={16} />
-                                            <p>Pending</p>
-                                        </>
-                                    )}
-
-                                    {alreadyApplied.status === "accepted" && (
-                                        <>
-                                            <FileCheck2 size={16} />
-                                            <p>Accepted</p>
-                                        </>
-                                    )}
-
-                                    {alreadyApplied.status === "rejected" && (
-                                        <>
-                                            <FileX2 size={16} />
-                                            <p>Rejected</p>
-                                        </>
-                                    )}
-                                </div>
-                            ) : (
-                                <AppllicationForms post={post}></AppllicationForms>
-                            )
+                            <AppllicationForms post={post} />
                         )
                     }
+
                 </div>
                 <div className="flex justify-end w-1/2">
                     <Candidate applicant={applicant}></Candidate>
