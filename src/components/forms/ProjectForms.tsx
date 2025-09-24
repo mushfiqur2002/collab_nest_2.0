@@ -20,9 +20,6 @@ export default function ProjectForms() {
     const { mutateAsync: createPost, isPending: isLoading } = useCreatePost();
     const { user } = useUserContext();
     const navigate = useNavigate();
-    const members = getMembers();
-
-    console.log('members:', members);
 
 
     const form = useForm<z.infer<typeof ProjectValidation>>({
