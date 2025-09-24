@@ -40,6 +40,14 @@ export type INewPost = {
     tags?: string;
 };
 
+export type INewProject = {
+    elderID: string;
+    projectName: string;
+    projectDiscription: string;
+    privacy: string;
+    members: string;
+};
+
 export type IApplicationPost = {
     userID: string;
     postID: string;

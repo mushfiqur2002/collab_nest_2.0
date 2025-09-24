@@ -11,6 +11,7 @@ import { useCreatePost } from "@/lib/react-query/queryandmutation";
 import { useUserContext } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
+import { getMembers } from "@/lib/appwrite/api";
 
 type ProjectFormProps = {
     post?: Models.Document;
@@ -19,6 +20,10 @@ export default function ProjectForms() {
     const { mutateAsync: createPost, isPending: isLoading } = useCreatePost();
     const { user } = useUserContext();
     const navigate = useNavigate();
+    const members = getMembers();
+
+    console.log('members:', members);
+
 
     const form = useForm<z.infer<typeof ProjectValidation>>({
         resolver: zodResolver(ProjectValidation),
