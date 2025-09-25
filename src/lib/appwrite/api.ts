@@ -1,6 +1,7 @@
 import { ID, Query } from "appwrite";
 import { account, appWriteConfig, avartars, databases, storage } from "./config";
-import type { IApplicationPost, IDBCollectionNewUser, ILogUser, INewPost, INewUser } from "@/types";
+import type { IApplicationPost, IDBCollectionNewUser, ILogUser, INewPost, INewProject, INewUser } from "@/types";
+import Project from "@/_root/pages/Project";
 
 
 // function to create users account
@@ -132,6 +133,28 @@ export async function createPost(post: INewPost) {
         );
 
         return newPost;
+    } catch (error) {
+        console.log("Error in createPost:", error);
+        return undefined;
+    }
+}
+
+// Create project
+export async function createProject(project: INewProject) {
+    try {
+        const newProject = await databases.createDocument(
+            appWriteConfig.databaseID,
+            appWriteConfig.projectsCollectionID,
+            ID.unique(),
+            {
+                elderID: project.elderID,
+                projectName: project.projectName,
+                projectDiscription: project.projectDiscription,
+                privacy: project.privacy,
+                members: project.members
+            }
+        )
+        return newProject
     } catch (error) {
         console.log("Error in createPost:", error);
         return undefined;
@@ -289,17 +312,17 @@ export async function getMembers() {
 }
 
 // Update Application
-export async function updateApplicationStatus(applicationID:string, status:'accepted' | 'rejected') {
+export async function updateApplicationStatus(applicationID: string, status: 'accepted' | 'rejected') {
     try {
         const update = await databases.updateDocument(
             appWriteConfig.databaseID,
             appWriteConfig.applicationsCollectionID,
             applicationID,
-            {status}
+            { status }
         )
         return update;
     } catch (error) {
-        console.log('error from api',error)
+        console.log('error from api', error)
     }
 }
 

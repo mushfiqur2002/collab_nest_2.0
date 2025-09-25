@@ -16,7 +16,6 @@ function People() {
         setMembers(members.documents);
         if (!members) {
           console.log('error from people.tsx');
-
         }
         return members
       } catch (error) {
