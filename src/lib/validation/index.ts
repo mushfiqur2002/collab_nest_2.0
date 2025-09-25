@@ -25,7 +25,7 @@ export const ProjectValidation = z.object({
     projectname: z.string().min(10, { message: 'minimum 10 characters' }).max(80, { message: 'maximum 80 characters' }),
     discription: z.string().min(10, { message: 'minimum 10 characters' }).max(80, { message: 'maximum 80 characters' }),
     privacy: z.string(),
-    members: z.string(),
+    members: z.array(z.string()).nonempty("Select at least one member"),
 })
 
 export const ApplicationValidation = z.object({

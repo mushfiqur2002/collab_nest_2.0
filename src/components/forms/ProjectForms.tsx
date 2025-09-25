@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
 import { getMembers, getUsers } from "@/lib/appwrite/api";
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 
 type ProjectFormProps = {
     post?: Models.Document;
@@ -52,8 +53,6 @@ export default function ProjectForms() {
         fetchUsers();
     }, []);
 
-    console.log(users);
-
 
 
     const form = useForm<z.infer<typeof ProjectValidation>>({
@@ -62,25 +61,18 @@ export default function ProjectForms() {
             userID: user.accountID,
             projectname: '',
             discription: '',
-            privacy: '', // ✅ Fixed typo here
-            members: ''
+            privacy: '',
+            members: []
         },
     });
 
     const findOwnMember = members.filter(ele => ele.elderID === user.accountID);
-    console.log('members', typeof members);
-
-    console.log(findOwnMember);
-
     const findOwnMembersInfo = users.filter(u =>
         findOwnMember.some(m => m.applicantUserID === u.accountID)
     );
-    console.log(findOwnMembersInfo);
-
-
 
     async function onSubmit(values: z.infer<typeof ProjectValidation>) {
-
+        console.log('project.tsx: ', values);
     }
     return (
         <div>
@@ -143,8 +135,8 @@ export default function ProjectForms() {
                                                 <SelectValue placeholder="Select privacy" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-dark-4">
-                                                <SelectItem value="recruiter">Public</SelectItem>
-                                                <SelectItem value="seeker">Private</SelectItem>
+                                                <SelectItem value="public">Public</SelectItem>
+                                                <SelectItem value="private">Private</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -162,30 +154,47 @@ export default function ProjectForms() {
                                     <FormControl>
                                         <div className="space-y-2">
                                             <Command className="bg-dark-4 border rounded-lg">
-                                                <CommandInput placeholder="Search members..." />
-                                                <CommandList>
+
+                                                <CommandInput placeholder="Search members..." className="border-none outline-none" />
+                                                <CommandList className="h-[100px]">
                                                     <CommandEmpty>No members found.</CommandEmpty>
                                                     <CommandGroup>
                                                         {findOwnMembersInfo.map((m) => (
                                                             <CommandItem
                                                                 key={m.accountID}
                                                                 onSelect={() => {
-                                                                    // toggle selection
                                                                     if (field.value?.includes(m.accountID)) {
                                                                         field.onChange(
-                                                                            field.value.filter((id:any) => id !== m.accountID)
+                                                                            field.value.filter((id: any) => id !== m.accountID)
                                                                         );
                                                                     } else {
                                                                         field.onChange([...(field.value || []), m.accountID]);
                                                                     }
                                                                 }}
+                                                                className="flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer transition"
                                                             >
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={field.value?.includes(m.accountID)}
-                                                                    readOnly
+                                                                {/* Avatar */}
+                                                                <img
+                                                                    src={m.avatarURL || "/default-avatar.png"}
+                                                                    alt={m.username}
+                                                                    className="w-8 h-8 rounded-full border border-indigo-400 object-cover"
                                                                 />
-                                                                {m.username} ({m.email})
+
+                                                                {/* User Info */}
+                                                                <div className="flex flex-col text-sm">
+                                                                    <span className="text-[16px] capitalize text-white">{m.username}</span>
+                                                                    <span className="text-xs text-gray-400">{m.email}</span>
+                                                                </div>
+
+                                                                {/* Checkbox */}
+                                                                <div className="ml-auto">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={field.value?.includes(m.accountID)}
+                                                                        readOnly
+                                                                        className="w-4 h-4 accent-indigo-500 cursor-pointer"
+                                                                    />
+                                                                </div>
                                                             </CommandItem>
                                                         ))}
                                                     </CommandGroup>
@@ -199,21 +208,33 @@ export default function ProjectForms() {
                                                     return (
                                                         <span
                                                             key={id}
-                                                            className="flex items-center gap-1 px-3 py-1 bg-dark-2 text-white rounded-full text-sm"
+                                                            className="flex items-center gap-2 px-2 py-1.5 rounded-full border text-sm shadow-sm hover:shadow-md transition"
                                                         >
-                                                            {user?.username}
+                                                            {/* Avatar */}
+                                                            <img
+                                                                src={user?.avatarURL || "/default-avatar.png"}
+                                                                alt={user?.username}
+                                                                className="w-6 h-6 rounded-full border border-indigo-400"
+                                                            />
+
+                                                            {/* Name */}
+                                                            <span className="text-[16px] capitalize">{user?.username}</span>
+
+                                                            {/* Remove Button */}
                                                             <button
                                                                 type="button"
                                                                 onClick={() =>
                                                                     field.onChange(field.value.filter((x: string) => x !== id))
                                                                 }
+                                                                className="ml-1 rounded-full p-1 hover:bg-indigo-500/30 transition"
                                                             >
-                                                                ✕
+                                                                <X className="w-4 h-4" />
                                                             </button>
                                                         </span>
                                                     );
                                                 })}
                                             </div>
+
                                         </div>
                                     </FormControl>
                                     <FormMessage />
