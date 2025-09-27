@@ -153,10 +153,10 @@ export default function ProjectForms() {
                                     <FormLabel>Members</FormLabel>
                                     <FormControl>
                                         <div className="space-y-2">
-                                            <Command className="bg-dark-4 border rounded-lg">
+                                            <Command className="bg-dark-4 border-none rounded-lg">
 
                                                 <CommandInput placeholder="Search members..." className="border-none outline-none" />
-                                                <CommandList className="h-[100px]">
+                                                <CommandList className="h-[100px] custom-scrollbar">
                                                     <CommandEmpty>No members found.</CommandEmpty>
                                                     <CommandGroup>
                                                         {findOwnMembersInfo.map((m) => (
