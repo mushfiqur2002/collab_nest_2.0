@@ -65,10 +65,10 @@ export default function ProjectForms({ project }: ProjectFormProps) {
             // members: project?members
 
             userID: user.accountID,
-            projectname: project?.projectname,
-            discription: project?.discription,
-            privacy: project?.privacy,
-            members: project?members
+            projectname: '',
+            discription: '',
+            privacy: '',
+            members: []
         },
     });
 
