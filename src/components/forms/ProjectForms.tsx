@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
 import { Input } from "../ui/input";
 import type { Models } from "appwrite";
-import { useCreatePost } from "@/lib/react-query/queryandmutation";
+import { useCreateProject } from "@/lib/react-query/queryandmutation";
 import { useUserContext } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
@@ -17,10 +17,10 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
 type ProjectFormProps = {
-    post?: Models.Document;
+    project?: Models.Document;
 };
-export default function ProjectForms() {
-    const { mutateAsync: createPost, isPending: isLoading } = useCreatePost();
+export default function ProjectForms({ project }: ProjectFormProps) {
+    const { mutateAsync: createProject, isPending: isLoading } = useCreateProject();
     const { user } = useUserContext();
     const [users, setUsers] = useState<Models.Document[]>([]);
 
@@ -58,11 +58,17 @@ export default function ProjectForms() {
     const form = useForm<z.infer<typeof ProjectValidation>>({
         resolver: zodResolver(ProjectValidation),
         defaultValues: {
+            // userID: user.accountID,
+            // projectname: project?.projectname,
+            // discription: project?.discription,
+            // privacy: project?.privacy,
+            // members: project?members
+
             userID: user.accountID,
-            projectname: '',
-            discription: '',
-            privacy: '',
-            members: []
+            projectname: project?.projectname,
+            discription: project?.discription,
+            privacy: project?.privacy,
+            members: project?members
         },
     });
 
@@ -90,7 +96,7 @@ export default function ProjectForms() {
                                     <FormLabel>Project Name</FormLabel>
                                     <FormControl>
                                         <Input
-                                            className="shad-input"
+                                            className="shad-input-2"
                                             placeholder="Enter Project Name"
                                             {...field}
                                         />
@@ -109,7 +115,7 @@ export default function ProjectForms() {
                                     <FormLabel>Discription</FormLabel>
                                     <FormControl>
                                         <Textarea
-                                            className="shad-textarea bg-"
+                                            className="shad-textarea-2"
                                             placeholder="Short intro for you project. [under 80 characters]"
                                             {...field}
                                         />
@@ -131,10 +137,10 @@ export default function ProjectForms() {
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
                                         >
-                                            <SelectTrigger className="w-full shad-input text-sm">
+                                            <SelectTrigger className="w-full shad-input-2 text-sm">
                                                 <SelectValue placeholder="Select privacy" />
                                             </SelectTrigger>
-                                            <SelectContent className="bg-dark-4">
+                                            <SelectContent className="bg-dark-3">
                                                 <SelectItem value="public">Public</SelectItem>
                                                 <SelectItem value="private">Private</SelectItem>
                                             </SelectContent>
@@ -153,7 +159,7 @@ export default function ProjectForms() {
                                     <FormLabel>Members</FormLabel>
                                     <FormControl>
                                         <div className="space-y-2">
-                                            <Command className="bg-dark-4 border-none rounded-lg">
+                                            <Command className="bg-dark-3 border-none rounded-lg">
 
                                                 <CommandInput placeholder="Search members..." className="border-none outline-none" />
                                                 <CommandList className="h-[100px] custom-scrollbar">

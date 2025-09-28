@@ -10,7 +10,7 @@ import Project from './_root/pages/Project'
 function App() {
 
   return (
-    <main className='flex dark-4 w-full h-screen'>
+    <main className='flex w-full h-screen'>
       <Routes>
         {/* public routes */}
         <Route element={<AuthLayout />}>

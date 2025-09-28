@@ -1,7 +1,21 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createUserAccount, signInAccount, signOutAccount, createPost, getRecentPosts, createApplication } from '../appwrite/api';
-import type { IApplicationPost, ILogUser, INewPost, INewUser } from '@/types';
-import { QUERY_KEYS } from './queryKeys';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createUserAccount,
+  signInAccount,
+  signOutAccount,
+  createPost,
+  getRecentPosts,
+  createApplication,
+  createProject,
+} from "../appwrite/api";
+import type {
+  IApplicationPost,
+  ILogUser,
+  INewPost,
+  INewProject,
+  INewUser,
+} from "@/types";
+import { QUERY_KEYS } from "./queryKeys";
 
 export const useCreateUserAccMutation = () => {
   return useMutation({
@@ -34,13 +48,25 @@ export const useCreatePost = () => {
   });
 };
 
-export const useGetRecentPosts = () => {
-    return useQuery({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-        queryFn: getRecentPosts,
-    })
-}
+export const useCreateProject = () => {
+  const queryClient = useQueryClient();
 
+  return useMutation({
+    mutationFn: (project: INewProject) => createProject(project),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
+
+export const useGetRecentPosts = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+    queryFn: getRecentPosts,
+  });
+};
 
 export const useApplication = () => {
   return useMutation({

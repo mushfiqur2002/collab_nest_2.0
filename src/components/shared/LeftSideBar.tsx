@@ -31,7 +31,7 @@ function LeftSideBar() {
 
     const userCategory = user.category;
     return (
-        <nav className="leftsidebar gap-4 h-full bg-gray-900">
+        <nav className="leftsidebar gap-4 h-full bg-light-1">
             {/* logo image */}
             <div className="flex gap-2">
                 <Link to="/">
