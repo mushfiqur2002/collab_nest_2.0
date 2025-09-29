@@ -1,6 +1,7 @@
 import { SquarePen } from "lucide-react"
 import ProjectForms from "@/components/forms/ProjectForms"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import ProjectDetails from "@/constants/ProjectDetails"
 function Project() {
   return (
     <div className="w-full py-2 px-4 md:px-6 md:py-6">
@@ -31,7 +32,7 @@ function Project() {
 
           {/* details content */}
           <TabsContent value="details" className="bg-dark-4 mt-0 px-4 py-4">
-            Change your password here.
+            <ProjectDetails />
           </TabsContent>
         </Tabs>
       </div>

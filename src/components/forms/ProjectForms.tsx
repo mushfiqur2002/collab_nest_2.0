@@ -83,9 +83,7 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                 return;
             }
 
-            console.log("postforms.tsx", newProject, "values", values, "user", user);
             showSuccess("Created successfully. Redirecting...");
-            navigate("/");
         } catch (error) {
             console.log("error submitting project", error);
             showError("Please try again.");

@@ -50,8 +50,7 @@ function PostCard({ post }: PostCardProps) {
     const alreadyApplied = applications.find(
         (application) => application.postID === post.$id && application.userID === user.accountID
     )
-    const userCategory = user.category
-    console.log(userCategory);
+    const userCategory = user.category;
 
     return (
         <div className="post-card p-4 shadow flex flex-col gap-4 relative">

@@ -15,6 +15,9 @@ export const QUERY_KEYS = {
   GET_USER_POSTS: "getUserPosts",
   GET_FILE_PREVIEW: "getFilePreview",
 
+  // PROJECT KEYS
+  GET_PROJECTS: "getProjects",
+
   //  SEARCH KEYS
   SEARCH_POSTS: "getSearchPosts",
 } as const;

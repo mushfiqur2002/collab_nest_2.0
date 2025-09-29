@@ -7,6 +7,7 @@ import {
   getRecentPosts,
   createApplication,
   createProject,
+  getProjects,
 } from "../appwrite/api";
 import type {
   IApplicationPost,
@@ -35,6 +36,7 @@ export const useSignOutUserAccMutation = () => {
   });
 };
 
+// create post
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
 
@@ -48,6 +50,7 @@ export const useCreatePost = () => {
   });
 };
 
+// create project
 export const useCreateProject = () => {
   const queryClient = useQueryClient();
 
@@ -68,6 +71,12 @@ export const useGetRecentPosts = () => {
   });
 };
 
+export const useGetProjects = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_PROJECTS],
+    queryFn: getProjects,
+  });
+};
 export const useApplication = () => {
   return useMutation({
     mutationFn: (post: IApplicationPost) => createApplication(post),

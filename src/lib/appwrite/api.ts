@@ -215,6 +215,19 @@ export async function getRecentPosts() {
     return posts;
 }
 
+// Get project 
+export async function getProjects() {
+    const projects = await databases.listDocuments(
+        appWriteConfig.databaseID,
+        appWriteConfig.projectsCollectionID
+    )
+
+    if (!projects) {
+        throw Error;
+    }
+    return projects;
+}
+
 
 // create application 
 export async function createApplication(post: IApplicationPost & { userID: string }) {
