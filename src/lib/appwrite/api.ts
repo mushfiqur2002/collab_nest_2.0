@@ -149,7 +149,7 @@ export async function createProject(project: INewProject) {
             {
                 elderID: project.elderID,
                 projectName: project.projectName,
-                projectDiscription: project.projectDiscription,
+                projectDescription: project.projectDescription,
                 privacy: project.privacy,
                 members: project.members
             }

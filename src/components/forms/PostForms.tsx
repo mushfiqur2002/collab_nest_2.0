@@ -30,7 +30,7 @@ function PostForms({ post }: PostFormProps) {
             caption: post?.caption || '',
             file: [],
             category: post?.category || '',
-            conditions: post?.conditions || '', // ✅ Fixed typo here
+            conditions: post?.conditions || '',
             tags: post?.tags?.join(',') || ''
         },
     });

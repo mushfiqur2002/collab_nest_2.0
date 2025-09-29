@@ -15,71 +15,84 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "
 import { getMembers, getUsers } from "@/lib/appwrite/api";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { useAlert } from "@/context/AlertContext";
 
 type ProjectFormProps = {
     project?: Models.Document;
 };
+
 export default function ProjectForms({ project }: ProjectFormProps) {
     const { mutateAsync: createProject, isPending: isLoading } = useCreateProject();
     const { user } = useUserContext();
     const [users, setUsers] = useState<Models.Document[]>([]);
-
-    const navigate = useNavigate();
     const [members, setMembers] = useState<Models.Document[]>([]);
+    const navigate = useNavigate();
+    const { showError, showSuccess } = useAlert();
 
     useEffect(() => {
         const fetchMembers = async () => {
             try {
-                const members = await getMembers()
-                setMembers(members.documents)
-                if (!members) console.log('error in porject.tsx');
-                return members
+                const res = await getMembers();
+                setMembers(res.documents);
             } catch (error) {
-                console.log(error);
+                console.log('error in fetchMembers', error);
             }
-        }
-        fetchMembers()
-    }, [])
+        };
+        fetchMembers();
+    }, []);
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const users = await getUsers();
-                setUsers(users.documents);
+                const res = await getUsers();
+                setUsers(res.documents);
             } catch (error) {
-                console.log('error from people.tsx', error);
+                console.log('error in fetchUsers', error);
             }
-        }
+        };
         fetchUsers();
     }, []);
 
+    const findOwnMember = members.filter((m) => m.elderID === user.accountID);
 
+    const findOwnMembersInfo = users.filter((u) =>
+        findOwnMember.some((m) => m.applicantUserID === u.accountID)
+    );
 
     const form = useForm<z.infer<typeof ProjectValidation>>({
         resolver: zodResolver(ProjectValidation),
         defaultValues: {
-            // userID: user.accountID,
-            // projectname: project?.projectname,
-            // discription: project?.discription,
-            // privacy: project?.privacy,
-            // members: project?members
-
-            userID: user.accountID,
-            projectname: '',
-            discription: '',
-            privacy: '',
-            members: []
+            elderID: user?.accountID,
+            projectName: project?.projectname || '',
+            projectDescription: project?.description || '',
+            privacy: project?.privacy || '',
+            members: project?.members || [],
         },
     });
 
-    const findOwnMember = members.filter(ele => ele.elderID === user.accountID);
-    const findOwnMembersInfo = users.filter(u =>
-        findOwnMember.some(m => m.applicantUserID === u.accountID)
-    );
-
     async function onSubmit(values: z.infer<typeof ProjectValidation>) {
-        console.log('project.tsx: ', values);
+        try {
+            const newProject = await createProject({
+                ...values,
+                elderID: user?.accountID
+            });
+
+            if (!newProject) {
+                console.log("user", user);
+                showError("please try again");
+                return;
+            }
+
+            console.log("postforms.tsx", newProject, "values", values, "user", user);
+            showSuccess("Created successfully. Redirecting...");
+            navigate("/");
+        } catch (error) {
+            console.log("error submitting project", error);
+            showError("Please try again.");
+        }
     }
+
+
     return (
         <div>
             <Form {...form}>
@@ -90,7 +103,7 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                         {/* Project Name */}
                         <FormField
                             control={form.control}
-                            name="projectname"
+                            name="projectName"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Project Name</FormLabel>
@@ -106,17 +119,17 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                             )}
                         />
 
-                        {/* discription Field */}
+                        {/* Description */}
                         <FormField
                             control={form.control}
-                            name="discription"
+                            name="projectDescription"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Discription</FormLabel>
+                                    <FormLabel>Description</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             className="shad-textarea-2"
-                                            placeholder="Short intro for you project. [under 80 characters]"
+                                            placeholder="Short intro for your project [under 80 characters]"
                                             {...field}
                                         />
                                     </FormControl>
@@ -125,7 +138,7 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                             )}
                         />
 
-                        {/* privacy */}
+                        {/* Privacy */}
                         <FormField
                             control={form.control}
                             name="privacy"
@@ -133,10 +146,7 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                                 <FormItem>
                                     <FormLabel>Privacy</FormLabel>
                                     <FormControl>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value}
-                                        >
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <SelectTrigger className="w-full shad-input-2 text-sm">
                                                 <SelectValue placeholder="Select privacy" />
                                             </SelectTrigger>
@@ -150,7 +160,8 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                                 </FormItem>
                             )}
                         />
-                        {/* members */}
+
+                        {/* Members */}
                         <FormField
                             control={form.control}
                             name="members"
@@ -160,8 +171,10 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                                     <FormControl>
                                         <div className="space-y-2">
                                             <Command className="bg-dark-3 border-none rounded-lg">
-
-                                                <CommandInput placeholder="Search members..." className="border-none outline-none" />
+                                                <CommandInput
+                                                    placeholder="Search members..."
+                                                    className="border-none outline-none"
+                                                />
                                                 <CommandList className="h-[100px] custom-scrollbar">
                                                     <CommandEmpty>No members found.</CommandEmpty>
                                                     <CommandGroup>
@@ -171,7 +184,7 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                                                                 onSelect={() => {
                                                                     if (field.value?.includes(m.accountID)) {
                                                                         field.onChange(
-                                                                            field.value.filter((id: any) => id !== m.accountID)
+                                                                            field.value.filter((id: string) => id !== m.accountID)
                                                                         );
                                                                     } else {
                                                                         field.onChange([...(field.value || []), m.accountID]);
@@ -179,20 +192,15 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                                                                 }}
                                                                 className="flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer transition"
                                                             >
-                                                                {/* Avatar */}
                                                                 <img
                                                                     src={m.avatarURL || "/default-avatar.png"}
                                                                     alt={m.username}
                                                                     className="w-8 h-8 rounded-full border border-indigo-400 object-cover"
                                                                 />
-
-                                                                {/* User Info */}
                                                                 <div className="flex flex-col text-sm">
                                                                     <span className="text-[16px] capitalize text-white">{m.username}</span>
                                                                     <span className="text-xs text-gray-400">{m.email}</span>
                                                                 </div>
-
-                                                                {/* Checkbox */}
                                                                 <div className="ml-auto">
                                                                     <input
                                                                         type="checkbox"
@@ -210,23 +218,18 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                                             {/* Selected tags */}
                                             <div className="flex flex-wrap gap-2">
                                                 {(field.value || []).map((id: string) => {
-                                                    const user = findOwnMembersInfo.find((m) => m.accountID === id);
+                                                    const u = findOwnMembersInfo.find((m) => m.accountID === id);
                                                     return (
                                                         <span
                                                             key={id}
                                                             className="flex items-center gap-2 px-2 py-1.5 rounded-full border text-sm shadow-sm hover:shadow-md transition"
                                                         >
-                                                            {/* Avatar */}
                                                             <img
-                                                                src={user?.avatarURL || "/default-avatar.png"}
-                                                                alt={user?.username}
+                                                                src={u?.avatarURL || "/default-avatar.png"}
+                                                                alt={u?.username}
                                                                 className="w-6 h-6 rounded-full border border-indigo-400"
                                                             />
-
-                                                            {/* Name */}
-                                                            <span className="text-[16px] capitalize">{user?.username}</span>
-
-                                                            {/* Remove Button */}
+                                                            <span className="text-[16px] capitalize">{u?.username}</span>
                                                             <button
                                                                 type="button"
                                                                 onClick={() =>
@@ -240,17 +243,13 @@ export default function ProjectForms({ project }: ProjectFormProps) {
                                                     );
                                                 })}
                                             </div>
-
                                         </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-
                     </div>
-
-
 
                     {/* Submit Button */}
                     <div className="flex justify-between gap-2">
@@ -263,3 +262,4 @@ export default function ProjectForms({ project }: ProjectFormProps) {
         </div>
     );
 }
+

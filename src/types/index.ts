@@ -43,9 +43,9 @@ export type INewPost = {
 export type INewProject = {
     elderID: string;
     projectName: string;
-    projectDiscription: string;
+    projectDescription: string;
     privacy: string;
-    members: string;
+    members: string[];
 };
 
 export type IApplicationPost = {
