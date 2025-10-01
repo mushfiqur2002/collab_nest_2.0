@@ -21,15 +21,18 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
             {/* Progress Bar */}
             <div className="mb-4">
-                <label className="text-xs text-gray-400 mb-1 block">Progress</label>
-                <input
-                    type="range"
-                    className="w-full accent-indigo-500"
-                    min="0"
-                    max="100"
-                    defaultValue="40"
-                    disabled
-                />
+                <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs text-gray-400">Progress</label>
+                    <span className="text-xs font-medium text-indigo-400">
+                        40%
+                    </span>
+                </div>
+                <div className="w-full h-2 bg-dark-4 rounded-full overflow-hidden">
+                    <div
+                        className="h-full bg-indigo-500 transition-all"
+                        style={{ width: "40%" }} // dynamically set percentage
+                    ></div>
+                </div>
             </div>
 
             {/* Members */}
