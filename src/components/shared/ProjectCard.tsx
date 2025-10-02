@@ -5,8 +5,6 @@ type ProjectCardProps = {
 };
 
 export default function ProjectCard({ project }: ProjectCardProps) {
-    console.log(project);
-
     return (
         <div className="p-6 rounded-xl shadow-md bg-dark-3 border border-dark-4 hover:shadow-lg transition">
             {/* Project Title */}
