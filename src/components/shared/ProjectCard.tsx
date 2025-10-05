@@ -11,6 +11,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             <h1 className="text-xl font-semibold text-white mb-2 capitalize">
                 {project.projectName}
             </h1>
+            <h1>hello world</h1>
 
             {/* Description */}
             <p className="text-sm text-gray-300 mb-4">
