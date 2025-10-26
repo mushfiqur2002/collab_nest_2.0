@@ -1,5 +1,5 @@
 import { Outlet, Navigate } from "react-router-dom";
-function AuthLayout({ isAuntenticated }: { isAuntenticated: Boolean }) {
+function PrivateLayout({ isAuntenticated }: { isAuntenticated: Boolean }) {
     return isAuntenticated ? (
         <Navigate to='/' />
     ) : (
@@ -12,4 +12,4 @@ function AuthLayout({ isAuntenticated }: { isAuntenticated: Boolean }) {
 
 }
 
-export default AuthLayout
+export default PrivateLayout
