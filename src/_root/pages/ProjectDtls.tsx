@@ -5,6 +5,7 @@ function ProjectDtls() {
     return (
         <div className="bg-dark-2 h-screen w-full">
             <h1>project id : {id}</h1>
+            <h1>project id : {id}</h1>
         </div>
     )
 }
