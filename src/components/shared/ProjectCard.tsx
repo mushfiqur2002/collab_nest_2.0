@@ -1,12 +1,10 @@
 import type { Models } from "appwrite";
 import { ArrowUpRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 type ProjectCardProps = {
     project: Models.Document;
 };
 export default function ProjectCard({ project }: ProjectCardProps) {
-    const navigate = useNavigate();
     return (
         <div className="p-6 rounded-xl shadow-md bg-dark-3 border border-dark-4 hover:shadow-lg transition">
             {/* Project Title */}
@@ -16,7 +14,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 </h1>
                 <div
                     className="w-8 h-8 bg-white text-black flex items-center justify-center rounded-full cursor-pointer"
-                    onClick={() => navigate(`/projects/${project.$id}`)}>
+                    onClick={() => {
+                        window.open(`${window.location.origin}/projects/${project.$id}`, "_blank");
+                    }}>
                     <ArrowUpRight strokeWidth={1} size={16} />
                 </div>
             </div>

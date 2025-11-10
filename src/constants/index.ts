@@ -1,4 +1,6 @@
-import { House, Users, FileUser, SquarePen, FolderGit2 } from 'lucide-react';
+import {
+    House, Users, FileUser, SquarePen, FolderGit2, CheckSquare, MessagesSquare, Video, PenTool
+} from 'lucide-react';
 export const navLinks = [
     {
         label: 'home',
@@ -54,3 +56,31 @@ export const bottomBarLinks = [
         path: '/project'
     },
 ]
+
+export const projectDashBoardNavLink = [
+    {
+        label: "Home",
+        icon: House,
+        path: "home",
+    },
+    {
+        label: "Tasks",
+        icon: CheckSquare,
+        path: "tasks",
+    },
+    {
+        label: "Chat",
+        icon: MessagesSquare,
+        path: "chat",
+    },
+    {
+        label: "Meetings",
+        icon: Video,
+        path: "meetings",
+    },
+    {
+        label: "Whiteboard",
+        icon: PenTool,
+        path: "whiteboard",
+    },
+];

@@ -46,7 +46,8 @@ function TopBar() {
                 </div>
 
                 <div className="flex flex-center gap-2">
-                    <Link to={`/profile/${user?.accountID}`}
+                    {/* <Link to={`/profile/${user?.accountID}`} */}
+                    <Link to={'/'}
                     >
                         <img
                             src={`${user.avatarURL}`}

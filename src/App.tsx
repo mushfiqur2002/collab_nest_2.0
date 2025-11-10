@@ -9,6 +9,7 @@ import RootLayout from './_root/RootLayout'
 import Project from './_root/pages/Project'
 import ProjectDtls from './_root/pages/ProjectDtls'
 import PrivateLayout from './_root/PrivateLayout'
+import ProjectDashboardLayout from './_root/ProjectDashboardLayout'
 function App() {
 
   return (
@@ -22,6 +23,8 @@ function App() {
 
         {/* private routes */}
         <Route element={<PrivateLayout isAuntenticated={false} />}>
+
+          {/* main layout  */}
           <Route element={<RootLayout />}>
             <Route index element={<Home />} />
             <Route path='/all-users' element={<People />}></Route>
@@ -30,7 +33,14 @@ function App() {
             <Route path='/project' element={<Project />} />
           </Route>
 
-          <Route path='/projects/:id' element={<ProjectDtls />} />
+          {/* project dashboard layout  */}
+          <Route element={<ProjectDashboardLayout />}>
+            <Route index path='/projects/:id' element={<ProjectDtls />} />
+            <Route path='/projects/:id/task' element={<ProjectDtls />} />
+            <Route path='/projects/:id/chat' element={<ProjectDtls />} />
+            <Route path='/projects/:id/meeting' element={<ProjectDtls />} />
+            <Route path='/projects/:id/whiteboard' element={<ProjectDtls />} />
+          </Route>
         </Route>
 
       </Routes>

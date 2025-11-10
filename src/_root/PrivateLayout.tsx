@@ -4,7 +4,7 @@ function PrivateLayout({ isAuntenticated }: { isAuntenticated: Boolean }) {
         <Navigate to='/' />
     ) : (
         <>
-            <section className="flex flex-col items-center justify-center w-full">
+            <section className="private flex flex-col items-center justify-start w-full">
                 <Outlet />
             </section>
         </>

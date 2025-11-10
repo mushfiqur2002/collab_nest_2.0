@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export type INewUser = {
     email: string;
     password: string;
@@ -26,10 +28,6 @@ export type IUser = {
     category: string
 }
 
-export type INavLink = {
-
-}
-
 
 export type INewPost = {
     userID: string;
@@ -54,4 +52,10 @@ export type IApplicationPost = {
     file: File[];
     fileID?: string;
     status?: string;
+}
+
+export interface INavLink {
+  label: string;
+  path: string;
+  icon: LucideIcon; // lucide icon type
 }

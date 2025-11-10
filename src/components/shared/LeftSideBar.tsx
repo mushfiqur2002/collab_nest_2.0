@@ -1,4 +1,3 @@
-import { navLinks } from "@/constants";
 import { useUserContext } from "@/context/AuthContext";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
@@ -6,8 +5,14 @@ import { useAlert } from "@/context/AlertContext";
 import { useSignOutUserAccMutation } from "@/lib/react-query/queryandmutation";
 import { useEffect } from "react";
 import { LogOut } from "lucide-react";
+import type { INavLink } from "@/types";
 
-function LeftSideBar() {
+interface LeftSideBarProps {
+    navLinks: INavLink[];
+    basePath?: string; // optional
+}
+
+function LeftSideBar({ navLinks, basePath = '' }: LeftSideBarProps) {
     const { user } = useUserContext();
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -69,7 +74,7 @@ function LeftSideBar() {
                                     }`}
                             >
                                 <NavLink
-                                    to={path}
+                                    to={`${basePath}/${path}`}
                                     className="flex gap-2 items-center justify-start"
                                 >
                                     <Icon className="w-4 h-4" />
