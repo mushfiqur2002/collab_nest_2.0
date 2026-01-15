@@ -1,7 +1,6 @@
 import { ID, Query } from "appwrite";
 import { account, appWriteConfig, avartars, databases, storage } from "./config";
 import type { IApplicationPost, IDBCollectionNewUser, ILogUser, INewPost, INewProject, INewUser } from "@/types";
-import Project from "@/_root/pages/Project";
 
 
 // function to create users account

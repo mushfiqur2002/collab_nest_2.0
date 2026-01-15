@@ -5,7 +5,6 @@ import { navLinks } from "@/constants"
 import { Outlet } from "react-router-dom"
 
 function RootLayout() {
-  navLinks
   return (
     <div className="w-full h-full md:flex md:flex-row flex-center md:flex-start flex-col bg-dark-2">
       <TopBar />
