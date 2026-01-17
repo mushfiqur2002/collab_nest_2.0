@@ -16,9 +16,9 @@ interface TaskFormData {
 
 function ProjectTaskBoard() {
     const { user } = useUserContext()
-    const { data: projects, isPending: isProjectLoading } = useGetProjects()
-    const { data: members, isPending: isMembersLoading } = useGetMembers();
-    const { data: users, isPending: isUsersLoading } = useGetUsers();
+    const { data: projects } = useGetProjects()
+    const { data: members } = useGetMembers();
+    const { data: users } = useGetUsers();
 
 
     const userProjects = projects?.documents.filter(project =>
