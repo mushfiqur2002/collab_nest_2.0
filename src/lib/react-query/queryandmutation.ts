@@ -11,6 +11,8 @@ import {
   getMembers,
   getUsers,
   createTask,
+  getTasks,
+  updateTaskStatus,
 } from "../appwrite/api";
 import type {
   IApplicationPost,
@@ -82,7 +84,6 @@ export const useGetProjects = () => {
   });
 };
 
-
 export const useGetMembers = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_MEMBERS],
@@ -116,3 +117,22 @@ export const useCreateTask = () => {
     },
   });
 };
+
+export const useUpdateTask = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ taskId, status }: { taskId: string; status: string }) => updateTaskStatus(taskId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_TASKS],
+      });
+    },
+  })
+}
+
+export const useGetTasks = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_TASKS],
+    queryFn: getTasks,
+  });
+}

@@ -185,6 +185,24 @@ export async function createTask(task: INewTask) {
     }
 }
 
+// Update only task status
+export async function updateTaskStatus(taskId: string, status: string) {
+    try {
+        const updatedTask = await databases.updateDocument(
+            appWriteConfig.databaseID,
+            appWriteConfig.taskCollectionID,
+            taskId,
+            {
+                status: status
+            }
+        );
+        return updatedTask;
+    } catch (error) {
+        console.log("Error in updateTaskStatus:", error);
+        return undefined;
+    }
+}
+
 
 // Upload file
 export async function uploadFile(file: File) {
@@ -250,6 +268,19 @@ export async function getProjects() {
         throw Error;
     }
     return projects;
+}
+
+// Get tasks
+export async function getTasks() {
+    const tasks = await databases.listDocuments(
+        appWriteConfig.databaseID,
+        appWriteConfig.taskCollectionID
+    )
+
+    if (!tasks) {
+        throw Error;
+    }
+    return tasks;
 }
 
 
