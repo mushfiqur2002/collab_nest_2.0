@@ -29,6 +29,20 @@ export const navLinks = [
     },
 ]
 
+
+export const projectNavLinks = [
+    {
+        label: 'home',
+        icon: House,
+        path: '/projects'
+    },
+    {
+        label: 'create task',
+        icon: CheckSquare,
+        path: '/projects/tasks'
+    }
+]
+
 export const bottomBarLinks = [
     {
         label: 'home',

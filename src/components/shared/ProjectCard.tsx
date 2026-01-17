@@ -15,7 +15,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 <div
                     className="w-8 h-8 bg-white text-black flex items-center justify-center rounded-full cursor-pointer"
                     onClick={() => {
-                        window.open(`${window.location.origin}/projects/${project.$id}`, "_blank");
+                        window.open(`${window.location.origin}/projects`, "_blank");
                     }}>
                     <ArrowUpRight strokeWidth={1} size={16} />
                 </div>

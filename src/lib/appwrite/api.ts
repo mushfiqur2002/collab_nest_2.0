@@ -1,6 +1,6 @@
 import { ID, Query } from "appwrite";
 import { account, appWriteConfig, avartars, databases, storage } from "./config";
-import type { IApplicationPost, IDBCollectionNewUser, ILogUser, INewPost, INewProject, INewUser } from "@/types";
+import type { IApplicationPost, IDBCollectionNewUser, ILogUser, INewPost, INewProject, INewTask, INewUser } from "@/types";
 
 
 // function to create users account
@@ -157,6 +157,29 @@ export async function createProject(project: INewProject) {
     } catch (error) {
         console.log("Error in createPost:", error);
         return undefined;
+    }
+}
+
+// Create Tasks
+export async function createTask(task: INewTask) {
+    try {
+        const newTask = await databases.createDocument(
+            appWriteConfig.databaseID,
+            appWriteConfig.taskCollectionID,
+            ID.unique(),
+            {
+                taskName: task.taskName,
+                taskDescription: task.taskDescription,
+                dueDate: task.dueDate,
+                priority: task.priority,
+                status: task.status,
+                taskOwner: task.taskOwner,
+                taskWorker: task.taskWorker,
+                assignProjectId: task.assignProjectId,
+            }
+        )
+    } catch (error) {
+
     }
 }
 

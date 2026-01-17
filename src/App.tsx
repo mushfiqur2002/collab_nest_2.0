@@ -7,9 +7,10 @@ import { Applications, CreatePost, Home, People } from './_root/pages'
 import AuthLayout from './_auth/AuthLayout'
 import RootLayout from './_root/RootLayout'
 import Project from './_root/pages/Project'
-import ProjectDtls from './_root/pages/ProjectDtls'
 import PrivateLayout from './_root/PrivateLayout'
 import ProjectDashboardLayout from './_root/ProjectDashboardLayout'
+import ProjectDashBoard from './components/shared/ProjectDashBoard'
+import ProjectTaskBoard from './components/shared/ProjectTaskBoard'
 function App() {
 
   return (
@@ -35,11 +36,8 @@ function App() {
 
           {/* project dashboard layout  */}
           <Route element={<ProjectDashboardLayout />}>
-            <Route index path='/projects/:id' element={<ProjectDtls />} />
-            <Route path='/projects/:id/task' element={<ProjectDtls />} />
-            <Route path='/projects/:id/chat' element={<ProjectDtls />} />
-            <Route path='/projects/:id/meeting' element={<ProjectDtls />} />
-            <Route path='/projects/:id/whiteboard' element={<ProjectDtls />} />
+            <Route index path='/projects' element={<ProjectDashBoard />} />
+            <Route path='/projects/tasks' element={< ProjectTaskBoard />} />
           </Route>
         </Route>
 

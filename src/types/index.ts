@@ -45,6 +45,16 @@ export type INewProject = {
     privacy: string;
     members: string[];
 };
+export type INewTask = {
+    taskName: string;
+    taskDescription: string;
+    dueDate: string;
+    priority: string;
+    status: string;
+    taskOwner: string;
+    taskWorker: string[];
+    assignProjectId: string;
+};
 
 export type IApplicationPost = {
     userID: string;
@@ -55,7 +65,7 @@ export type IApplicationPost = {
 }
 
 export interface INavLink {
-  label: string;
-  path: string;
-  icon: LucideIcon; // lucide icon type
+    label: string;
+    path: string;
+    icon: LucideIcon; // lucide icon type
 }

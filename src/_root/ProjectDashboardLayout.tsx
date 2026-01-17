@@ -1,14 +1,14 @@
 import BottomBar from "@/components/shared/BottomBar"
-import LeftSideBar from "@/components/shared/LeftSideBar"
-import { projectDashBoardNavLink } from "@/constants"
-import { Outlet, useParams } from "react-router-dom"
+import ProjectLeftSide from "@/components/shared/ProjectLeftSide"
+import { Outlet } from "react-router-dom"
 
 function ProjectDashboardLayout() {
-    const { id } = useParams()
     return (
         <div className="w-full h-full md:flex md:flex-row flex-center md:flex-start flex-col bg-dark-2">
-            <LeftSideBar navLinks={projectDashBoardNavLink} basePath={`/projects/${id}`} />
-            <Outlet />
+            <ProjectLeftSide />
+            <section className="flex flex-1 h-full w-full overflow-y-auto py-4 px-2">
+                <Outlet />
+            </section>
             <BottomBar />
 
         </div>

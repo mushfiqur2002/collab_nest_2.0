@@ -5,9 +5,9 @@ import { useAlert } from "@/context/AlertContext";
 import { useSignOutUserAccMutation } from "@/lib/react-query/queryandmutation";
 import { useEffect } from "react";
 import { LogOut } from "lucide-react";
-import { navLinks } from "@/constants";
+import { projectNavLinks } from "@/constants";
 
-function LeftSideBar() {
+function ProjectLeftSide() {
     const { user } = useUserContext();
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -59,7 +59,7 @@ function LeftSideBar() {
             {/* navigation links */}
             <div>
                 <ul className="flex flex-col gap-2 mt-4">
-                    {navLinks.map(({ path, label, icon: Icon }) => {
+                    {projectNavLinks.map(({ path, label, icon: Icon }) => {
                         const isActive = pathname === path;
 
                         return (
@@ -94,4 +94,4 @@ function LeftSideBar() {
     )
 }
 
-export default LeftSideBar
+export default ProjectLeftSide
