@@ -178,8 +178,10 @@ export async function createTask(task: INewTask) {
                 assignProjectId: task.assignProjectId,
             }
         )
+        return newTask
     } catch (error) {
-
+        console.log("Error in createTask:", error);
+        return undefined
     }
 }
 

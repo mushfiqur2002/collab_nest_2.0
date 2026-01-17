@@ -10,7 +10,6 @@ import { Input } from "../ui/input";
 import type { Models } from "appwrite";
 import { useCreateProject } from "@/lib/react-query/queryandmutation";
 import { useUserContext } from "@/context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
 import { getMembers, getUsers } from "@/lib/appwrite/api";
 import { useEffect, useState } from "react";
@@ -26,7 +25,6 @@ export default function ProjectForms({ project }: ProjectFormProps) {
     const { user } = useUserContext();
     const [users, setUsers] = useState<Models.Document[]>([]);
     const [members, setMembers] = useState<Models.Document[]>([]);
-    const navigate = useNavigate();
     const { showError, showSuccess } = useAlert();
 
     useEffect(() => {

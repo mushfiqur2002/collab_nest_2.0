@@ -45,7 +45,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             <div>
                 <h2 className="text-sm font-medium text-gray-200 mb-2">Members</h2>
                 <div className="flex -space-x-3">
-                    {project.members?.slice(0, 5).map((m: string, index: number) => (
+                    {project.members?.slice(0, 5).map((index: number) => (
                         <img
                             key={index}
                             src="/default-avatar.png"
