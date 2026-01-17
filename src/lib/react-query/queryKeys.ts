@@ -1,3 +1,5 @@
+import type { get } from "http";
+
 export const QUERY_KEYS = {
   // AUTH KEYS
   CREATE_USER_ACCOUNT: "createUserAccount",
@@ -17,6 +19,10 @@ export const QUERY_KEYS = {
 
   // PROJECT KEYS
   GET_PROJECTS: "getProjects",
+
+  GET_MEMBERS: "getMembers",
+
+  GET_TASKS: 'getTasks',
 
   //  SEARCH KEYS
   SEARCH_POSTS: "getSearchPosts",

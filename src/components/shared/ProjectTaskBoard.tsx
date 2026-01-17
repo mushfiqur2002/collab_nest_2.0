@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, User, Users, Folder, AlertCircle, Clock, FileText } from 'lucide-react';
+import { useUserContext } from '@/context/AuthContext';
+import { useGetMembers, useGetProjects, useGetUsers } from '@/lib/react-query/queryandmutation';
 
 interface TaskFormData {
     taskName: string;
@@ -13,6 +15,32 @@ interface TaskFormData {
 }
 
 function ProjectTaskBoard() {
+    const { user } = useUserContext()
+    const { data: projects, isPending: isProjectLoading } = useGetProjects()
+    const { data: members, isPending: isMembersLoading } = useGetMembers();
+    const { data: users, isPending: isUsersLoading } = useGetUsers();
+
+
+    const userProjects = projects?.documents.filter(project =>
+        project.elderID === user?.accountID ||
+        project.members?.includes(user?.accountID)
+    ) || [];
+
+    const userMembers = members?.documents.filter(member =>
+        member.elderID === user?.accountID ||
+        member.members?.includes(user?.accountID)
+    ) || [];
+
+    const userMembersInfo = users?.documents.filter(u =>
+        userMembers.some(member => member.applicantUserID === u.accountID)
+    ) || [];
+
+    console.log(userMembersInfo);
+
+
+
+
+
     const [formData, setFormData] = useState<TaskFormData>({
         taskName: '',
         taskDescription: '',
@@ -27,31 +55,7 @@ function ProjectTaskBoard() {
     const priorities = [
         { value: 'low', label: 'Low', color: 'text-green-600' },
         { value: 'medium', label: 'Medium', color: 'text-yellow-600' },
-        { value: 'high', label: 'High', color: 'text-orange-600' },
-        { value: 'critical', label: 'Critical', color: 'text-red-600' }
-    ];
-
-    const statuses = [
-        { value: 'pending', label: 'Pending' },
-        { value: 'in-progress', label: 'In Progress' },
-        { value: 'review', label: 'Under Review' },
-        { value: 'completed', label: 'Completed' },
-        { value: 'blocked', label: 'Blocked' }
-    ];
-
-    const teamMembers = [
-        { id: '1', name: 'John Doe' },
-        { id: '2', name: 'Jane Smith' },
-        { id: '3', name: 'Mike Johnson' },
-        { id: '4', name: 'Sarah Wilson' },
-        { id: '5', name: 'Alex Brown' }
-    ];
-
-    const projects = [
-        { id: 'p1', name: 'Website Redesign' },
-        { id: 'p2', name: 'Mobile App Development' },
-        { id: 'p3', name: 'Marketing Campaign' },
-        { id: 'p4', name: 'API Integration' }
+        { value: 'high', label: 'High', color: 'text-orange-600' }
     ];
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -171,18 +175,13 @@ function ProjectTaskBoard() {
                             <Clock className="inline h-4 w-4 mr-1" />
                             Status
                         </label>
-                        <select
+                        <input
                             name="status"
-                            value={formData.status}
+                            value={'In Progress'}
                             onChange={handleChange}
                             className="w-full px-4 py-3 border rounded-lg bg-[#2B2A2A] border-none outline-none"
-                        >
-                            {statuses.map(status => (
-                                <option key={status.value} value={status.value}>
-                                    {status.label}
-                                </option>
-                            ))}
-                        </select>
+                            readOnly
+                        />
                     </div>
 
                     {/* Task Owner */}
@@ -194,11 +193,12 @@ function ProjectTaskBoard() {
                         <input
                             type="text"
                             name="taskOwner"
-                            value={formData.taskOwner}
+                            value={user.accountID}
                             onChange={handleChange}
                             maxLength={2000}
                             className="w-full px-4 py-3 border rounded-lg bg-[#2B2A2A] border-none outline-none"
                             placeholder="Enter task owner name"
+                            readOnly
                         />
                         <p className="text-xs text-gray-500 mt-1">Max 2000 characters ({formData.taskOwner.length}/2000)</p>
                     </div>
@@ -211,23 +211,23 @@ function ProjectTaskBoard() {
                         Assign Task Workers
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-                        {teamMembers.map(member => (
+                        {userMembersInfo.map(member => (
                             <div
-                                key={member.id}
+                                key={member.accountID}
                                 className={`border rounded-lg p-3 cursor-pointer transition-all ${formData.taskWorker.includes(member.id)
                                     ? 'border-blue-900 bg-[#2B2A2A]'
                                     : 'border-gray-300 hover:border-gray-400'
                                     }`}
-                                onClick={() => handleWorkerToggle(member.id)}
+                                onClick={() => handleWorkerToggle(member.accountID)}
                             >
                                 <div className="flex items-center">
                                     <input
                                         type="checkbox"
-                                        checked={formData.taskWorker.includes(member.id)}
-                                        onChange={() => handleWorkerToggle(member.id)}
+                                        checked={formData.taskWorker.includes(member.accountID)}
+                                        onChange={() => handleWorkerToggle(member.accountID)}
                                         className="h-4 w-4 rounded"
                                     />
-                                    <span className="ml-2 text-sm">{member.name}</span>
+                                    <span className="ml-2 text-sm capitalize">{member.username}</span>
                                 </div>
                             </div>
                         ))}
@@ -236,7 +236,7 @@ function ProjectTaskBoard() {
                         Selected: {formData.taskWorker.length} workers
                         {formData.taskWorker.length > 0 && (
                             <span className="ml-2 text-blue-300">
-                                {formData.taskWorker.map(id => teamMembers.find(m => m.id === id)?.name).join(', ')}
+                                {formData.taskWorker.map(id => users?.documents.find(u => u.accountID === id)?.username).join(', ')}
                             </span>
                         )}
                     </p>
@@ -249,7 +249,7 @@ function ProjectTaskBoard() {
                         Assign to Project
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                        {projects.map(project => (
+                        {userProjects.map(project => (
                             <div
                                 key={project.id}
                                 className={`border rounded-lg p-4 cursor-pointer transition-all ${formData.assignProjectId === project.id
@@ -260,7 +260,7 @@ function ProjectTaskBoard() {
                             >
                                 <div className="flex items-center">
                                     <div className={`h-3 w-3 rounded-full mr-3 ${formData.assignProjectId === project.id ? 'bg-blue-500' : 'bg-gray-300'}`} />
-                                    <span className="font-medium text-gray-100">{project.name}</span>
+                                    <span className="font-medium text-gray-100 capitalize">{project.projectName}</span>
                                 </div>
                             </div>
                         ))}

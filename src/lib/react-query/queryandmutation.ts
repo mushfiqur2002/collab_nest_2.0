@@ -8,12 +8,16 @@ import {
   createApplication,
   createProject,
   getProjects,
+  getMembers,
+  getUsers,
+  createTask,
 } from "../appwrite/api";
 import type {
   IApplicationPost,
   ILogUser,
   INewPost,
   INewProject,
+  INewTask,
   INewUser,
 } from "@/types";
 import { QUERY_KEYS } from "./queryKeys";
@@ -77,8 +81,38 @@ export const useGetProjects = () => {
     queryFn: getProjects,
   });
 };
+
+
+export const useGetMembers = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_MEMBERS],
+    queryFn: getMembers,
+  })
+}
+
+export const useGetUsers = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USERS],
+    queryFn: getUsers,
+  });
+}
+
 export const useApplication = () => {
   return useMutation({
     mutationFn: (post: IApplicationPost) => createApplication(post),
+  });
+};
+
+
+export const useCreateTask = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (task: INewTask) => createTask(task),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_TASKS],
+      });
+    },
   });
 };
