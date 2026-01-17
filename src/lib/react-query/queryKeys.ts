@@ -1,5 +1,3 @@
-import type { get } from "http";
-
 export const QUERY_KEYS = {
   // AUTH KEYS
   CREATE_USER_ACCOUNT: "createUserAccount",
