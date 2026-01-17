@@ -45,7 +45,7 @@ function SignUpForm() {
 
     async function onSubmit(values: z.infer<typeof SignupValidation>) {
         console.log(values);
-        
+
         const newUser = await createUserAccount(values);
 
         if (!newUser || newUser instanceof Error) {
@@ -143,7 +143,7 @@ function SignUpForm() {
                                             defaultValue={field.value}
                                         >
                                             <SelectTrigger className="w-full shad-input text-sm">
-                                                <SelectValue placeholder="Select category"/>
+                                                <SelectValue placeholder="Select category" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-dark-4">
                                                 <SelectItem value="recruiter">Recruiter</SelectItem>
@@ -178,6 +178,7 @@ function SignUpForm() {
                         <Button
                             className="capitalize bg-primary-600 text-white w-full"
                             type="submit"
+                            id="submitBtnSignUp"
                             disabled={isUserLoading || isCreatingUser || isSignIn}>{
                                 isUserLoading || isCreatingUser || isSignIn ? (
                                     <div className="flex items-center justify-center gap-2">

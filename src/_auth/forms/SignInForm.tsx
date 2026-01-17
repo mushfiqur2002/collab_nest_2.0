@@ -116,6 +116,7 @@ function SignInForm() {
                     <Button
                         className="capitalize bg-primary-600 text-white w-full"
                         type="submit"
+                        id="submitBtn"
                         disabled={isSignIn || isUserLoading}
                     >
                         {isSignIn || isUserLoading ? (
