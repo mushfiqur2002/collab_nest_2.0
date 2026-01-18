@@ -18,12 +18,12 @@ function SignInForm() {
     const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
     const { mutateAsync: signInAccount, isPending: isSignIn } = useSignInUserAccMutation();
     const { showError, showSuccess, showLoading } = useAlert();
-    
+
     useEffect(() => {
         if (isSignIn) {
             showLoading();
         }
-    },[signInAccount, isSignIn, showLoading]);
+    }, [signInAccount, isSignIn, showLoading]);
 
     const form = useForm<z.infer<typeof SigninValidation>>({
         resolver: zodResolver(SigninValidation),
@@ -43,7 +43,7 @@ function SignInForm() {
                 showError("Invalid email or password.");
                 return;
             }
-            
+
             const isLoggedIn = await checkAuthUser();
             if (!isLoggedIn) {
                 // Session exists but user fetch failed — treat as invalid login
@@ -57,7 +57,7 @@ function SignInForm() {
             form.reset();
             setTimeout(() => {
                 navigate('/')
-            },3000);
+            }, 3000);
         } catch (err) {
             showError("Invalid email or password.");
         }
@@ -67,10 +67,9 @@ function SignInForm() {
         <div className="flex flex-col items-center justify-start w-full gap-5 p-12">
             <div>
                 <img
-                    src="/public/assets/dark-mode-logo.png"
-                    alt="Collab Nest Logo"
-                    className="h-12 mb-4 mx-auto"
-                />
+                    src="https://i.ibb.co.com/Ps8RnRFX/dark-mode-logo.png"
+                    alt="dark mode logo"
+                    className="h-12 mb-4 mx-auto" />
                 <h1 className="text-2xl font-bold text-center mb-4">Sign In</h1>
                 <p className="text-md text-gray-600 text-center mb-6">
                     Welcome to collabnest. Now you can collaborate with others.

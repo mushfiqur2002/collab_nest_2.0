@@ -88,8 +88,10 @@ function SignUpForm() {
         <>
             <div className="flex flex-col items-center justify-start w-full gap-5 p-12">
                 <div className="">
-                    <img src="/public/assets/dark-mode-logo.png"
-                        alt="Collab Nest Logo"
+
+                    <img
+                        src="https://i.ibb.co.com/Ps8RnRFX/dark-mode-logo.png"
+                        alt="dark mode logo"
                         className="h-12 mb-4 mx-auto" />
                     <h1 className="text-2xl font-bold text-center mb-4">Sign Up</h1>
                     <p className="text-md text-gray-600 text-center mb-6">Create an account to start collaborating with others.</p>
