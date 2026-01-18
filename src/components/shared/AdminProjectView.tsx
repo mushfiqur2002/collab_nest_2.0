@@ -30,7 +30,6 @@ import { useUserContext } from '@/context/AuthContext';
 import { useGetProjects, useGetTasks, useUpdateTask } from '@/lib/react-query/queryandmutation';
 import { useAlert } from '@/context/AlertContext';
 import { storage } from '@/lib/appwrite/config'; // Import Appwrite storage
-import { ID } from 'appwrite'; // Import ID for type checking
 
 // Create a reusable StatusUpdateModal component
 interface StatusUpdateModalProps {
@@ -123,7 +122,7 @@ interface TaskFilesModalProps {
     fileId?: string; // Add fileId prop
 }
 
-const TaskFilesModal = ({ isOpen, onClose, taskId, taskName, fileId }: TaskFilesModalProps) => {
+const TaskFilesModal = ({ isOpen, onClose, taskName, fileId }: TaskFilesModalProps) => {
     const [files, setFiles] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);

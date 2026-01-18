@@ -51,8 +51,6 @@ function WorkerProjectView() {
 
     // Calculate statistics
     const totalTasks = workerTasks.length;
-    const inProgressTasks = workerTasks.filter(task => task.status === 'in-progress').length;
-    const completedTasks = workerTasks.filter(task => task.status === 'completed').length;
     const submittedTasks = workerTasks.filter(task => task.status === 'review' || task.status === 'submitted').length;
     const overdueTasks = workerTasks.filter(task => {
         if (!task.dueDate) return false;
