@@ -8,7 +8,7 @@ function RootLayout() {
     <div className="w-full h-full md:flex md:flex-row flex-center md:flex-start flex-col bg-dark-2">
       <TopBar />
       <LeftSideBar />
-      <section className="flex flex-1 h-full w-full md:max-w-[500px] overflow-y-auto">
+      <section className="flex flex-1 h-full w-full md:max-w-[700px] overflow-y-auto">
         <Outlet />
       </section>
       <BottomBar />

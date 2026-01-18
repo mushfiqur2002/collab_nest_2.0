@@ -13,6 +13,7 @@ import {
   createTask,
   getTasks,
   updateTaskStatus,
+  updateTaskStatusFileID,
 } from "../appwrite/api";
 import type {
   IApplicationPost,
@@ -122,6 +123,18 @@ export const useUpdateTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ taskId, status }: { taskId: string; status: string }) => updateTaskStatus(taskId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_TASKS],
+      });
+    },
+  })
+}
+
+export const useUpdateTaskWithFile = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ taskId, status, fileId }: { taskId: string; status: string; fileId: string }) => updateTaskStatusFileID(taskId, status, fileId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_TASKS],

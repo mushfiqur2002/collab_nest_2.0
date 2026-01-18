@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     ClipboardList,
     CheckCircle,
@@ -9,11 +9,13 @@ import {
     Eye,
     AlertCircle,
     Check,
-    ChevronDown,
     Calendar,
     FileText,
     Folder,
-    MoreVertical
+    MoreVertical,
+    Download,
+    X,
+    Paperclip
 } from 'lucide-react'
 import {
     Table,
@@ -27,6 +29,8 @@ import { format } from 'date-fns';
 import { useUserContext } from '@/context/AuthContext';
 import { useGetProjects, useGetTasks, useUpdateTask } from '@/lib/react-query/queryandmutation';
 import { useAlert } from '@/context/AlertContext';
+import { storage } from '@/lib/appwrite/config'; // Import Appwrite storage
+import { ID } from 'appwrite'; // Import ID for type checking
 
 // Create a reusable StatusUpdateModal component
 interface StatusUpdateModalProps {
@@ -110,7 +114,266 @@ const StatusUpdateModal = ({ task, isOpen, onClose, onStatusUpdate }: StatusUpda
     );
 };
 
-// Create a StatusDropdown component for inline updates
+// Files Modal Component
+interface TaskFilesModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    taskId: string;
+    taskName?: string;
+    fileId?: string; // Add fileId prop
+}
+
+const TaskFilesModal = ({ isOpen, onClose, taskId, taskName, fileId }: TaskFilesModalProps) => {
+    const [files, setFiles] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    // Fetch file from Appwrite when modal opens
+    useEffect(() => {
+        const fetchFileFromAppwrite = async () => {
+            if (!isOpen || !fileId) return;
+            
+            setIsLoading(true);
+            setError(null);
+            try {
+                // Replace with your actual Appwrite bucket ID
+                const bucketId = import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID || 'your-bucket-id';
+                
+                console.log('Fetching file with ID:', fileId);
+                console.log('Bucket ID:', bucketId);
+                
+                // Get file metadata from Appwrite
+                const fileMetadata = await storage.getFile(bucketId, fileId);
+                console.log('File metadata:', fileMetadata);
+                
+                // Get file URL for download
+                const fileUrl = storage.getFileView(bucketId, fileId);
+                console.log('File URL:', fileUrl);
+                
+                // You can also get a preview URL if needed:
+                // const previewUrl = storage.getFilePreview(bucketId, fileId);
+                
+                const fileData = {
+                    ...fileMetadata,
+                    name: fileMetadata.name,
+                    size: fileMetadata.sizeOriginal,
+                    type: fileMetadata.mimeType,
+                    url: fileUrl.toString(),
+                    uploadedAt: fileMetadata.$createdAt
+                };
+                
+                setFiles([fileData]);
+            } catch (error: any) {
+                console.error('Error fetching file from Appwrite:', error);
+                setError(`Failed to load file: ${error.message}`);
+                setFiles([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchFileFromAppwrite();
+    }, [isOpen, fileId]);
+
+    // Helper function to get file icon
+    const getFileIcon = (fileName: string, mimeType?: string) => {
+        const ext = fileName.split('.').pop()?.toLowerCase();
+        const type = mimeType?.toLowerCase() || '';
+        
+        if (ext === 'pdf' || type.includes('pdf')) 
+            return <FileText className="h-8 w-8 text-red-500" />;
+        if (['doc', 'docx'].includes(ext || '') || type.includes('word')) 
+            return <FileText className="h-8 w-8 text-blue-500" />;
+        if (['xls', 'xlsx', 'csv'].includes(ext || '') || type.includes('excel') || type.includes('sheet')) 
+            return <FileText className="h-8 w-8 text-green-500" />;
+        if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(ext || '') || type.includes('image')) 
+            return <FileText className="h-8 w-8 text-purple-500" />;
+        if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext || '') || type.includes('zip') || type.includes('compressed')) 
+            return <Folder className="h-8 w-8 text-yellow-500" />;
+        if (['mp4', 'avi', 'mov', 'wmv', 'mkv'].includes(ext || '') || type.includes('video')) 
+            return <FileText className="h-8 w-8 text-orange-500" />;
+        if (['mp3', 'wav', 'ogg', 'm4a'].includes(ext || '') || type.includes('audio')) 
+            return <FileText className="h-8 w-8 text-pink-500" />;
+        return <FileText className="h-8 w-8 text-gray-500" />;
+    };
+
+    // Helper function to format file size
+    const formatFileSize = (bytes: number) => {
+        if (!bytes) return 'Unknown size';
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-dark-3 rounded-lg p-6 w-full max-w-3xl max-h-[80vh] overflow-y-auto">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 className="text-xl font-bold text-gray-100 flex items-center gap-2">
+                            <Paperclip className="h-5 w-5" />
+                            Task File
+                        </h3>
+                        {taskName && (
+                            <p className="text-sm text-gray-400 mt-1">
+                                File attached to task: <span className="text-gray-300 font-medium">{taskName}</span>
+                            </p>
+                        )}
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="p-2 hover:bg-dark-4 rounded-lg text-gray-400 hover:text-white"
+                    >
+                        <X className="h-5 w-5" />
+                    </button>
+                </div>
+
+                {/* Error Message */}
+                {error && (
+                    <div className="mb-4 p-4 bg-red-900/20 border border-red-700 rounded-lg">
+                        <p className="text-red-400">{error}</p>
+                        <p className="text-sm text-gray-400 mt-1">
+                            File ID: <code className="bg-dark-4 px-2 py-1 rounded text-xs">{fileId}</code>
+                        </p>
+                    </div>
+                )}
+
+                {/* Files Content */}
+                {isLoading ? (
+                    <div className="flex flex-col justify-center items-center py-12">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+                        <p className="text-gray-400">Loading file from Appwrite...</p>
+                    </div>
+                ) : files.length === 0 && !error ? (
+                    <div className="text-center py-12">
+                        <FileText className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                        <h4 className="text-lg font-medium text-gray-300 mb-2">No File Found</h4>
+                        <p className="text-gray-500">This task doesn't have an uploaded file.</p>
+                        {fileId && (
+                            <p className="text-sm text-gray-600 mt-2">
+                                File ID: <code className="bg-dark-4 px-2 py-1 rounded">{fileId}</code>
+                            </p>
+                        )}
+                    </div>
+                ) : (
+                    <div className="space-y-6">
+                        {/* File Information */}
+                        {files.map((file, index) => (
+                            <div key={index} className="bg-dark-4 rounded-lg p-6">
+                                <div className="flex flex-col md:flex-row md:items-start gap-6">
+                                    {/* File Icon and Name */}
+                                    <div className="flex-shrink-0">
+                                        <div className="flex flex-col items-center">
+                                            {getFileIcon(file.name, file.type)}
+                                            <div className="mt-4 text-center">
+                                                <button
+                                                    onClick={() => window.open(file.url, '_blank')}
+                                                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition-colors flex items-center gap-2"
+                                                >
+                                                    <Download className="h-4 w-4" />
+                                                    Download File
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* File Details */}
+                                    <div className="flex-1">
+                                        <h5 className="text-xl font-bold text-gray-100 mb-2">{file.name}</h5>
+                                        
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                            <div className="space-y-3">
+                                                <div>
+                                                    <p className="text-sm text-gray-400 mb-1">File Size</p>
+                                                    <p className="text-gray-100 font-medium">
+                                                        {formatFileSize(file.size)}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm text-gray-400 mb-1">File Type</p>
+                                                    <p className="text-gray-100 font-medium">
+                                                        {file.type || 'Unknown'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="space-y-3">
+                                                <div>
+                                                    <p className="text-sm text-gray-400 mb-1">Uploaded Date</p>
+                                                    <p className="text-gray-100 font-medium flex items-center gap-2">
+                                                        <Calendar className="h-4 w-4" />
+                                                        {file.uploadedAt ? new Date(file.uploadedAt).toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        }) : 'Unknown'}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm text-gray-400 mb-1">File ID</p>
+                                                    <p className="text-gray-100 font-mono text-sm break-all">
+                                                        {file.$id}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* File Preview (for images and PDFs) */}
+                                        {(file.type?.includes('image') || file.type?.includes('pdf')) && (
+                                            <div className="mt-6 pt-6 border-t border-dark-3">
+                                                <p className="text-sm text-gray-400 mb-3">Preview</p>
+                                                {file.type?.includes('image') ? (
+                                                    <div className="flex justify-center">
+                                                        <img 
+                                                            src={file.url} 
+                                                            alt={file.name}
+                                                            className="max-h-64 rounded-lg border border-dark-3"
+                                                            onError={(e) => {
+                                                                (e.target as HTMLImageElement).style.display = 'none';
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ) : file.type?.includes('pdf') ? (
+                                                    <div className="bg-dark-3 p-4 rounded-lg">
+                                                        <p className="text-gray-400 text-sm">
+                                                            PDF file - Use the download button above to view
+                                                        </p>
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Footer */}
+                <div className="flex justify-between items-center mt-6 pt-6 border-t border-dark-4">
+                    <div className="text-sm text-gray-500">
+                        File stored in Appwrite Storage
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Task Type
 type TaskType = {
     $id: string;
     status?: string;
@@ -121,73 +384,9 @@ type TaskType = {
     taskWorker?: string[];
     dueDate?: string;
     priority?: string;
+    uploadedFile?: string; // This should contain the Appwrite file ID
     [key: string]: any;
 };
-
-// interface StatusDropdownProps {
-//     task: TaskType;
-//     onStatusUpdate: (taskId: string, newStatus: string) => void;
-// }
-
-// const StatusDropdown = ({ task, onStatusUpdate }: StatusDropdownProps) => {
-//     const [isOpen, setIsOpen] = useState(false);
-
-//     const statusOptions = [
-//         { value: 'in-progress', label: 'In Progress', icon: Clock, color: 'text-blue-500', bg: 'bg-blue-900/30' },
-//         { value: 'review', label: 'Under Review', icon: Eye, color: 'text-purple-500', bg: 'bg-purple-900/30' },
-//         { value: 'completed', label: 'Completed', icon: Check, color: 'text-green-500', bg: 'bg-green-900/30' }
-//     ];
-
-//     const currentStatus = statusOptions.find(s => s.value === (task.status || 'pending')) || statusOptions[0];
-
-//     const handleStatusChange = (status: any) => {
-//         setIsOpen(false);
-//         onStatusUpdate(task.$id, status);
-//     };
-
-//     return (
-//         <div className="relative">
-//             <button
-//                 className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center ${currentStatus.bg} ${currentStatus.color} hover:opacity-80`}
-//                 onClick={(e) => {
-//                     e.stopPropagation();
-//                     setIsOpen(!isOpen);
-//                 }}
-//             >
-//                 {currentStatus.icon && <currentStatus.icon className="h-3 w-3 mr-1" />}
-//                 {currentStatus.label}
-//                 <ChevronDown className="h-3 w-3 ml-1" />
-//             </button>
-
-//             {isOpen && (
-//                 <div
-//                     className="absolute z-20 mt-1 w-48 bg-dark-3 border border-dark-4 rounded-lg shadow-lg"
-//                     onClick={(e) => e.stopPropagation()}
-//                 >
-//                     <div className="py-1">
-//                         {statusOptions.map((status) => {
-//                             const Icon = status.icon;
-//                             return (
-//                                 <button
-//                                     key={status.value}
-//                                     className={`w-full flex items-center px-4 py-2 text-sm hover:bg-dark-4 ${task.status === status.value ? status.color : 'text-gray-300'
-//                                         }`}
-//                                     onClick={() => handleStatusChange(status.value)}
-//                                 >
-//                                     <Icon className={`h-4 w-4 mr-3 ${status.color}`} />
-//                                     {status.label}
-//                                     {task.status === status.value && (
-//                                         <Check className="h-4 w-4 ml-auto" />
-//                                     )}
-//                                 </button>
-//                             );
-//                         })}
-//                     </div>
-//                 </div>
-//             )}
-//         </div>
-//     );
-// };
 
 function AdminProjectView() {
     const { user } = useUserContext();
@@ -197,8 +396,16 @@ function AdminProjectView() {
     const { showSuccess } = useAlert()
 
     // State for status update modal
-    const [selectedTask, setSelectedTask] = useState(null);
+    const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    
+    // State for files modal
+    const [isFilesModalOpen, setIsFilesModalOpen] = useState(false);
+    const [selectedTaskForFiles, setSelectedTaskForFiles] = useState<{
+        id: string, 
+        name?: string,
+        fileId?: string
+    } | null>(null);
 
     // Filter projects to show only current user's projects
     const userProjects = projects?.documents?.filter(project =>
@@ -291,7 +498,6 @@ function AdminProjectView() {
         }
     };
 
-
     const getTaskBadge = (status: string) => {
         switch (status?.toLowerCase()) {
             case 'completed':
@@ -342,6 +548,25 @@ function AdminProjectView() {
         setIsModalOpen(true);
     };
 
+    // Handle viewing files
+    const handleViewFiles = (task: any) => {
+        console.log('Task clicked:', task);
+        console.log('Uploaded file ID:', task.uploadedFile);
+        
+        if (!task.uploadedFile) {
+            // Show alert if no file is attached
+            alert('This task has no attached file.');
+            return;
+        }
+
+        setSelectedTaskForFiles({
+            id: task.$id,
+            name: task.taskName,
+            fileId: task.uploadedFile
+        });
+        setIsFilesModalOpen(true);
+    };
+
     // Check if due date is overdue
     const isOverdue = (dueDate: string) => {
         if (!dueDate) return false;
@@ -350,6 +575,11 @@ function AdminProjectView() {
         } catch {
             return false;
         }
+    };
+
+    // Check if task has uploaded file
+    const hasUploadedFile = (task: any) => {
+        return !!task.uploadedFile;
     };
 
     const isLoading = isLoadingProjects || isLoadingTasks;
@@ -384,6 +614,18 @@ function AdminProjectView() {
                     onStatusUpdate={handleStatusUpdate}
                 />
             )}
+
+            {/* Files Modal */}
+            <TaskFilesModal
+                isOpen={isFilesModalOpen}
+                onClose={() => {
+                    setIsFilesModalOpen(false);
+                    setSelectedTaskForFiles(null);
+                }}
+                taskId={selectedTaskForFiles?.id || ''}
+                taskName={selectedTaskForFiles?.name}
+                fileId={selectedTaskForFiles?.fileId} // Pass the file ID
+            />
 
             {/* Statistics Cards */}
             <div className="task-card py-2 flex flex-wrap gap-4">
@@ -554,6 +796,7 @@ function AdminProjectView() {
                                     const priorityBadge = getPriorityBadge(task.priority);
                                     const taskBadge = getTaskBadge(task.status);
                                     const isTaskOverdue = isOverdue(task.dueDate);
+                                    const hasFile = hasUploadedFile(task);
 
                                     return (
                                         <TableRow
@@ -565,6 +808,11 @@ function AdminProjectView() {
                                                 <div className="flex flex-col">
                                                     <div className="font-medium text-gray-100 truncate max-w-xs">
                                                         {task.taskName}
+                                                        {hasFile && (
+                                                            <span className="ml-2 inline-flex items-center">
+                                                                <Paperclip className="h-3 w-3 text-blue-400" />
+                                                            </span>
+                                                        )}
                                                     </div>
                                                     {task.taskDescription && (
                                                         <div className="text-sm text-gray-400 truncate max-w-xs">
@@ -607,13 +855,8 @@ function AdminProjectView() {
                                                 </div>
                                             </TableCell>
 
-                                            {/* Status (with dropdown) */}
+                                            {/* Status */}
                                             <TableCell>
-                                                {/* <StatusDropdown
-                                                    task={task}
-                                                    onStatusUpdate={handleStatusUpdate}
-                                                /> */}
-
                                                 <div className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center ${taskBadge.bg} ${taskBadge.text}`}>
                                                     {taskBadge.icon}
                                                     {taskBadge.label}
@@ -632,12 +875,10 @@ function AdminProjectView() {
                                             <TableCell>
                                                 <div className="flex space-x-2">
                                                     <button
-                                                        className="p-2 text-gray-400 hover:text-blue-400 hover:bg-dark-4 rounded-lg"
-                                                        title="View Task"
-                                                        onClick={() => {
-                                                            // Navigate to task details
-                                                            // navigate(`/tasks/${task.$id}`);
-                                                        }}
+                                                        className={`p-2 rounded-lg ${hasFile ? 'text-gray-400 hover:text-blue-400 hover:bg-dark-4' : 'text-gray-600 cursor-not-allowed'}`}
+                                                        title={hasFile ? "View Uploaded File" : "No File Attached"}
+                                                        onClick={() => hasFile && handleViewFiles(task)}
+                                                        disabled={!hasFile}
                                                     >
                                                         <Eye className="h-4 w-4" />
                                                     </button>

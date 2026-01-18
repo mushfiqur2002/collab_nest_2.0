@@ -203,6 +203,24 @@ export async function updateTaskStatus(taskId: string, status: string) {
     }
 }
 
+export async function updateTaskStatusFileID(taskId: string, status: string, fileID: string) {
+    try {
+        const updatedTask = await databases.updateDocument(
+            appWriteConfig.databaseID,
+            appWriteConfig.taskCollectionID,
+            taskId,
+            {
+                status: status,
+                uploadedFile: fileID
+            }
+        );
+        return updatedTask;
+    } catch (error) {
+        console.log("Error in updateTaskStatus:", error);
+        return undefined;
+    }
+}
+
 
 // Upload file
 export async function uploadFile(file: File) {

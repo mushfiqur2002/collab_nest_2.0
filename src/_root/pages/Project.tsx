@@ -8,7 +8,7 @@ function Project() {
   const { user } = useUserContext()
   const userCategory = user?.category
   return (
-    <div className="w-full py-2 px-4 md:px-0">
+    <div className="w-full py-2 px-4 md:px-0 md:py-6">
       <div className="flex flex-1 gap-2 flex-start py-2">
         {
           userCategory === 'recruiter' ? (
