@@ -1,21 +1,51 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
+import { useState } from 'react';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 
-function Searching() {
-    return (
-        <div className="flex w-full flex flex-center sticky top-0 py-2 md:py-4">
-            <Input
-                type="text"
-                placeholder="Search for people, posts, applications..."
-                className="w-full shad-input rounded-full"
-            />
-            <Button className="bg-dark-4 shad-input rounded-full flex flex-center absolute right-0">
-                <Search />
-            </Button>
-
-        </div>
-    )
+interface SearchingProps {
+    onSearch?: (query: string) => void;
+    searchValue?: string;
 }
 
-export default Searching
+const Searching = ({ onSearch, searchValue }: SearchingProps) => {
+    const [query, setQuery] = useState(searchValue || '');
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (onSearch) {
+            onSearch(query);
+        }
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleSearch(e);
+        }
+    };
+
+    return (
+        <div className="flex w-full flex-center sticky top-0 py-0 md:py-6">
+            <form onSubmit={handleSearch} className="relative w-full">
+                <Input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search for people, posts, applications..."
+                    className="w-full shad-input rounded-full pr-12"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                />
+                <Button
+                    type="submit"
+                    className="bg-dark-4 shad-input rounded-full flex flex-center absolute right-0 top-0 h-full px-4"
+                    id="searchInputBtn"
+                >
+                    <Search className="h-4 w-4" />
+                </Button>
+            </form>
+        </div>
+    );
+};
+
+export default Searching;
