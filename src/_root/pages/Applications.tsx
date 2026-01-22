@@ -92,6 +92,7 @@ function Applications() {
               ))
             }
           </ul>
+          <p>application</p>
         </div>
       </div>
     </div>

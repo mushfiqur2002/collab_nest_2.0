@@ -8,6 +8,8 @@ import { useAlert } from "@/context/AlertContext";
 
 
 function Applicant({ post, applicant }: any) {
+    console.log(applicant);
+
     const { user } = useUserContext();
     const [users, setUsers] = useState<Models.Document[]>([]);
     const { showError, showSuccess, showLoading } = useAlert();
@@ -70,6 +72,9 @@ function Applicant({ post, applicant }: any) {
                             )
                         })}
                     </p>
+                </div>
+                <div>
+                    <p>{post?.$createdAt}</p>
                 </div>
             </div>
 

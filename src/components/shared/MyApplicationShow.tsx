@@ -1,9 +1,12 @@
+import DisplayDate from "@/constants/DisplayDate";
 
 function MyApplicationShow({ myappliedpost, application }: any) {
+    console.log(myappliedpost);
+    
     return (
         <div className="post-card p-4 shadow flex flex-col gap-4 relative">
             <div className="">
-                <h1 className="text-gray-500 pb-2">{myappliedpost.$id}</h1>
+                <h1 className="text-gray-500 pb-2">{myappliedpost.$createdAt}</h1>
                 <p className="base-regular">{myappliedpost.caption}</p>
                 <div className="flex flex-1 flex-col text-light-3 text-sm capitalize py-2">
                     <p>category: {myappliedpost?.category}</p>
@@ -11,6 +14,7 @@ function MyApplicationShow({ myappliedpost, application }: any) {
                 </div>
                 <div className="">
                     <p className="flex text-sm text-primary-600 gap-1 capitalize">
+                        {myappliedpost?.$createdAt}
                         tags:
                         {myappliedpost?.tags.map((tag: any) => {
                             return (
@@ -19,6 +23,7 @@ function MyApplicationShow({ myappliedpost, application }: any) {
                         })}
                     </p>
                 </div>
+                <DisplayDate date={application?.$createdAt}></DisplayDate>
                 <div>
                     {
                         myappliedpost.file && (

@@ -94,14 +94,14 @@ const Home = () => {
                                                     Found {filteredPosts.length} post{filteredPosts.length !== 1 ? 's' : ''}
                                                 </p>
                                             </div>
-                                            {searchQuery && (
+                                            {/* {searchQuery && (
                                                 <button
                                                     onClick={() => setSearchQuery('')}
                                                     className="px-3 py-1 text-sm bg-dark-4 text-gray-300 hover:text-white rounded-lg transition-colors"
                                                 >
                                                     Clear Search
                                                 </button>
-                                            )}
+                                            )} */}
                                         </div>
                                     </div>
                                 )}
